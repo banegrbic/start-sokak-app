@@ -359,19 +359,15 @@
       Sortable.create(container, {
         animation: 180,
         handle: '.drag-handle',
-        filter: '.visibility-toggle, input, button[data-visibility-toggle], .custom-link-form, form',
-        preventOnFilter: true,
+        filter: '.visibility-toggle, input, button[data-visibility-toggle], .custom-link-form, form, button',
+        preventOnFilter: false,
         ghostClass: 'sortable-ghost',
         chosenClass: 'sortable-chosen',
         dragClass: 'sortable-drag',
         delay: 150,
         delayOnTouchOnly: true,
-        onMove: function (evt) {
-          // Block if hovering visibility toggle or form
-          if (evt.related && evt.related.querySelector && (evt.related.querySelector(':hover')?.closest('[data-visibility-toggle], input, button[type="submit"]'))) {
-            return false;
-          }
-          return true;
+        onFilter: function (evt) {
+          // Filtered element clicked/tapped - allow normal click behavior
         },
         onEnd: function () { saveOrder(); }
       });
