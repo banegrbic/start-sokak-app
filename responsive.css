@@ -557,3 +557,12 @@ body {
 
   .links a { font-size: 13px; padding: 6px 10px; }
 }
+
+/* Desktop & laptop: 2 kolone za kategorije */
+@media (min-width: 900px) {
+  .kategorije {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
