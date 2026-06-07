@@ -643,8 +643,12 @@
         renderCustom();
       }
       if (customForm) {
+        // Prevent Sortable.js from intercepting events on the form
+        customForm.addEventListener('mousedown', function (e) { e.stopPropagation(); }, true);
+        customForm.addEventListener('click', function (e) { e.stopPropagation(); }, true);
         customForm.addEventListener('submit', function (e) {
           e.preventDefault();
+          e.stopPropagation();
           var nameInput = customForm.querySelector('input[name="name"]');
           var urlInput = customForm.querySelector('input[name="url"]');
           var name = (nameInput.value || '').trim();
@@ -658,6 +662,9 @@
         });
       }
       if (customZone) {
+        // Custom drag-drop for custom links (similar to categories)
+        // (we keep it simple - just reorder without complex feedback)
+        // Use Sortable.js - it works fine here since there's no button inside customZone
         Sortable.create(customZone, {
           animation: 180,
           ghostClass: 'sortable-ghost',
