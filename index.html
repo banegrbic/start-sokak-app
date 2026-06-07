@@ -413,19 +413,29 @@
         });
       }
       function attachVisibilityListeners() {
-        // No-op
+        // Use mousedown/pointerdown/touchstart capture to fire BEFORE Sortable.js
+        // (which listens on document for drag). When we see a click on visibility-toggle,
+        // we stop propagation so Sortable never sees it.
+        ['mousedown', 'pointerdown', 'touchstart', 'click'].forEach(function (evName) {
+          document.addEventListener(evName, function (e) {
+            var btn = e.target.closest && e.target.closest('[data-visibility-toggle]');
+            if (!btn) return;
+            e.stopPropagation();
+            if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+            // Only handle click here, allow others to pass
+            if (evName === 'click') {
+              e.preventDefault();
+              var cat = btn.closest('.category');
+              if (cat) {
+                cat.classList.toggle('is-hidden');
+                saveHidden();
+                updateToggleIcons();
+              }
+            }
+          }, true);
+        });
       }
       attachVisibilityListeners();
-      document.addEventListener('click', function (e) {
-        var btn = e.target.closest('[data-visibility-toggle]');
-        if (!btn) return;
-        e.preventDefault();
-        e.stopPropagation();
-        var cat = btn.closest('.category');
-        cat.classList.toggle('is-hidden');
-        saveHidden();
-        updateToggleIcons();
-      });
       var showAllBtn = document.getElementById('showAllBtn');
       if (showAllBtn) {
         showAllBtn.addEventListener('click', function () {
