@@ -364,6 +364,9 @@
       function onPointerDownDragHandle(e) {
         var handle = e.target.closest('.drag-handle');
         if (!handle) return;
+        // CRITICAL: do NOT call preventDefault here for buttons inside the handle
+        // (like our visibility-toggle). Only block default for the drag-handle itself.
+        if (e.target.closest('.visibility-toggle, input, button, form')) return;
         var section = handle.closest('.category');
         if (!section) return;
         // Only left mouse button or touch/pen
