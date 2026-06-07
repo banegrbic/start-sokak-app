@@ -359,6 +359,20 @@ body {
 .sortable-chosen { box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
 .sortable-drag { opacity: 0.85; cursor: grabbing !important; }
 
+/* Custom category drag-and-drop (no Sortable) */
+.category.is-dragging {
+  opacity: 0.6;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  transform-origin: center;
+  transition: box-shadow 0.15s ease;
+}
+.category-placeholder {
+  background: rgba(77, 171, 247, 0.08);
+  border: 2px dashed var(--link-color);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
 /* Custom link form */
 .custom-link-form {
   display: flex;
