@@ -1,0 +1,110 @@
+/* CSS Variables for consistent theming */
+:root {
+  --primary-bg: #2c2c2c;
+  --secondary-bg: #3a3a3a;
+  --text-color: #ffffff;
+  --text-muted: #cccccc;
+  --border-color: #555555;
+  --link-color: #4dabf7;
+  --link-hover: #339af0;
+  --link-visited: #9775fa;
+  --link-active: #ffd43b;
+  --shadow: 0 2px 4px rgba(0,0,0,0.3);
+  --radius: 8px;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.main-container {
+  margin-top: 40px;
+  padding-left: 80px;
+  padding-right: 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+.category {
+  background-color: var(--secondary-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.category h2 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-color);
+  border-bottom: 2px solid var(--link-color);
+  padding-bottom: 8px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.links a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: #4a4a4a;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.links a:hover {
+  background-color: var(--link-hover);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(77, 171, 247, 0.4);
+  font-weight: 700;
+}
+
+.links a:visited {
+  color: var(--link-visited);
+  background-color: #5a4fcf;
+}
+
+.links a:active {
+  background-color: var(--link-active);
+  color: #2c2c2c;
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .category {
+    padding: 12px;
+  }
+
+  .category h2 {
+    font-size: 16px;
+  }
+
+  .links a {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
+}
