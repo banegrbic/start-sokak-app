@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260607b" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260607c" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script>
@@ -40,7 +40,6 @@
             btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
           }
         }
-        // Sync aria-pressed with whatever was applied by the early script
         if (btn) {
           btn.setAttribute('aria-pressed', current() === 'light' ? 'true' : 'false');
           btn.addEventListener('click', function () {
@@ -49,202 +48,356 @@
         }
       })();
     </script>
+    <div class="toolbar">
+        <input type="search" id="searchInput" class="search-input" placeholder="🔍 Filtriraj linkove..." aria-label="Filtriraj linkove" autocomplete="off" />
+        <span id="searchCount" class="search-count" aria-live="polite"></span>
+        <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje linkove</button>
+    </div>
     <div class="main-container">
         <div class="column">
+            <section class="category" id="category-moji-linkovi" data-category="Moji linkovi" data-empty="true">
+                <h2>★ Moji linkovi <span class="hint">(prevuci ovde)</span></h2>
+                <div class="links" id="favorites-zone" data-drop-zone="true" aria-label="Zona za prevlačenje omiljenih linkova">
+                    <p class="empty-message" id="favorites-empty">Ovde prevucite omiljene linkove</p>
+                </div>
+            </section>
+
             <section class="category">
                 <h2>Pretraga i pošta</h2>
                 <div class="links">
-                    <a href="http://www.google.com/">Google</a>
-                    <a href="http://www.gmail.com/">Gmail</a>
-                    <a href="http://www.youtube.com/">YouTube</a>
-                    <a href="http://www.yahoo.com/">Yahoo!</a>
-                    <a href="http://mail.yahoo.com/">Yahoo Mail</a>
-                    <a href="http://www.bing.com/">Bing</a>
-                    <a href="http://en.wikipedia.org/wiki/Main_Page">Wikipedia</a>
-                    <a href="http://sr.wikipedia.org/sr">Wikipedia-rs</a>
-                    <a href="https://duckduckgo.com/">DuckDuckGo</a>
-                    <a href="https://search.brave.com/">Brave Search</a>
-                    <a href="https://www.startpage.com/">Startpage</a>
-                    <a href="https://chat.openai.com/chat">ChatGPT</a>
-                    <a href="https://mail.proton.me/">ProtonMail</a>
+                    <a href="http://www.google.com/" draggable="true" data-href="http://www.google.com/" data-name="Google">Google</a>
+                    <a href="http://www.gmail.com/" draggable="true" data-href="http://www.gmail.com/" data-name="Gmail">Gmail</a>
+                    <a href="http://www.youtube.com/" draggable="true" data-href="http://www.youtube.com/" data-name="YouTube">YouTube</a>
+                    <a href="http://www.yahoo.com/" draggable="true" data-href="http://www.yahoo.com/" data-name="Yahoo!">Yahoo!</a>
+                    <a href="http://mail.yahoo.com/" draggable="true" data-href="http://mail.yahoo.com/" data-name="Yahoo Mail">Yahoo Mail</a>
+                    <a href="http://www.bing.com/" draggable="true" data-href="http://www.bing.com/" data-name="Bing">Bing</a>
+                    <a href="http://en.wikipedia.org/wiki/Main_Page" draggable="true" data-href="http://en.wikipedia.org/wiki/Main_Page" data-name="Wikipedia">Wikipedia</a>
+                    <a href="http://sr.wikipedia.org/sr" draggable="true" data-href="http://sr.wikipedia.org/sr" data-name="Wikipedia-rs">Wikipedia-rs</a>
+                    <a href="https://duckduckgo.com/" draggable="true" data-href="https://duckduckgo.com/" data-name="DuckDuckGo">DuckDuckGo</a>
+                    <a href="https://search.brave.com/" draggable="true" data-href="https://search.brave.com/" data-name="Brave Search">Brave Search</a>
+                    <a href="https://chat.openai.com/chat" draggable="true" data-href="https://chat.openai.com/chat" data-name="ChatGPT">ChatGPT</a>
+                    <a href="https://mail.proton.me/" draggable="true" data-href="https://mail.proton.me/" data-name="ProtonMail">ProtonMail</a>
                 </div>
             </section>
 
             <section class="category">
                 <h2>Globalni servisi</h2>
                 <div class="links">
-                    <a href="http://translate.google.com/">Translate</a>
-                    <a href="https://www.google.com/drive/">Drive</a>
-                    <a href="https://www.dropbox.com/">Dropbox</a>
-                    <a href="https://maps.google.com/">Google Maps</a>
-                    <a href="https://photos.google.com/">Google Photos</a>
-                    <a href="https://pixabay.com/">Pixabay</a>
-                    <a href="https://www.aliexpress.com/">AliExpress</a>
-                    <a href="http://www.ebay.com/">eBay</a>
-                    <a href="http://www.amazon.com/">Amazon</a>
-                    <a href="https://feedly.com/">Feedly</a>
-                    <a href="http://www.blogger.com/">Blogger</a>
-                    <a href="https://imgur.com/">Imgur</a>
-                    <a href="http://www.filehippo.com/">FileHippo</a>
-                    <a href="http://thepiratebay.org/">ThePirateBay</a>
-                    <a href="https://open-meteo.com/en/docs?latitude=45.61&longitude=19.52&forecast_days=7">Open-Meteo Kula</a>
+                    <a href="http://translate.google.com/" draggable="true" data-href="http://translate.google.com/" data-name="Translate">Translate</a>
+                    <a href="https://www.google.com/drive/" draggable="true" data-href="https://www.google.com/drive/" data-name="Drive">Drive</a>
+                    <a href="https://www.dropbox.com/" draggable="true" data-href="https://www.dropbox.com/" data-name="Dropbox">Dropbox</a>
+                    <a href="https://maps.google.com/" draggable="true" data-href="https://maps.google.com/" data-name="Google Maps">Google Maps</a>
+                    <a href="https://photos.google.com/" draggable="true" data-href="https://photos.google.com/" data-name="Google Photos">Google Photos</a>
+                    <a href="https://pixabay.com/" draggable="true" data-href="https://pixabay.com/" data-name="Pixabay">Pixabay</a>
+                    <a href="https://www.aliexpress.com/" draggable="true" data-href="https://www.aliexpress.com/" data-name="AliExpress">AliExpress</a>
+                    <a href="http://www.ebay.com/" draggable="true" data-href="http://www.ebay.com/" data-name="eBay">eBay</a>
+                    <a href="http://www.amazon.com/" draggable="true" data-href="http://www.amazon.com/" data-name="Amazon">Amazon</a>
+                    <a href="https://feedly.com/" draggable="true" data-href="https://feedly.com/" data-name="Feedly">Feedly</a>
+                    <a href="http://www.blogger.com/" draggable="true" data-href="http://www.blogger.com/" data-name="Blogger">Blogger</a>
+                    <a href="https://imgur.com/" draggable="true" data-href="https://imgur.com/" data-name="Imgur">Imgur</a>
+                    <a href="http://www.filehippo.com/" draggable="true" data-href="http://www.filehippo.com/" data-name="FileHippo">FileHippo</a>
+                    <a href="http://thepiratebay.org/" draggable="true" data-href="http://thepiratebay.org/" data-name="ThePirateBay">ThePirateBay</a>
                 </div>
             </section>
 
             <section class="category">
                 <h2>Domaći servisi</h2>
                 <div class="links">
-                    <a href="https://moj.esdnevnik.rs/login">moj esDnevnik</a>
-                    <a href="https://11811.rs/">Bele strane</a>
-                    <a href="http://www.infostud.com/">Infostud</a>
-                    <a href="https://euprava.gov.rs/">eUprava</a>
-                    <a href="http://www.apr.gov.rs/">APR</a>
-                    <a href="http://www.weather2umbrella.com/">Weather2Umbrella</a>
-                    <a href="http://tv.aladin.info/">TV program</a>
-                    <a href="https://eon.tv/">EON</a>
+                    <a href="https://moj.esdnevnik.rs/login" draggable="true" data-href="https://moj.esdnevnik.rs/login" data-name="moj esDnevnik">moj esDnevnik</a>
+                    <a href="https://11811.rs/" draggable="true" data-href="https://11811.rs/" data-name="Bele strane">Bele strane</a>
+                    <a href="http://www.infostud.com/" draggable="true" data-href="http://www.infostud.com/" data-name="Infostud">Infostud</a>
+                    <a href="https://euprava.gov.rs/" draggable="true" data-href="https://euprava.gov.rs/" data-name="eUprava">eUprava</a>
+                    <a href="http://www.apr.gov.rs/" draggable="true" data-href="http://www.apr.gov.rs/" data-name="APR">APR</a>
+                    <a href="http://www.weather2umbrella.com/" draggable="true" data-href="http://www.weather2umbrella.com/" data-name="Weather2Umbrella">Weather2Umbrella</a>
+                    <a href="http://tv.aladin.info/" draggable="true" data-href="http://tv.aladin.info/" data-name="TV program">TV program</a>
+                    <a href="https://eon.tv/" draggable="true" data-href="https://eon.tv/" data-name="EON">EON</a>
                 </div>
             </section>
 
             <section class="category">
                 <h2>Zabava</h2>
                 <div class="links">
-                    <a href="http://www.njuz.net/">Njuz</a>
-                    <a href="http://www.tarzanija.com/">Tarzanija</a>
-                    <a href="http://ispovesti.com/">Ispovesti</a>
-                    <a href="http://vukajlija.com/">Vukajlija</a>
-                    <a href="http://www.igrice123.rs/">Igrice123</a>
-                    <a href="http://www.travian.rs/">Travian</a>
-                    <a href="http://www.hattrick.org/">Hattrick</a>
-                    <a href="http://www.coolinarika.com/">Coolinarika</a>
-                    <a href="http://www.deviantart.com/">DeviantART</a>
-                    <a href="http://www.livescore.com/">Live Score</a>
+                    <a href="http://www.njuz.net/" draggable="true" data-href="http://www.njuz.net/" data-name="Njuz">Njuz</a>
+                    <a href="http://www.tarzanija.com/" draggable="true" data-href="http://www.tarzanija.com/" data-name="Tarzanija">Tarzanija</a>
+                    <a href="http://ispovesti.com/" draggable="true" data-href="http://ispovesti.com/" data-name="Ispovesti">Ispovesti</a>
+                    <a href="http://vukajlija.com/" draggable="true" data-href="http://vukajlija.com/" data-name="Vukajlija">Vukajlija</a>
+                    <a href="http://www.igrice123.rs/" draggable="true" data-href="http://www.igrice123.rs/" data-name="Igrice123">Igrice123</a>
+                    <a href="http://www.travian.rs/" draggable="true" data-href="http://www.travian.rs/" data-name="Travian">Travian</a>
+                    <a href="http://www.hattrick.org/" draggable="true" data-href="http://www.hattrick.org/" data-name="Hattrick">Hattrick</a>
+                    <a href="http://www.coolinarika.com/" draggable="true" data-href="http://www.coolinarika.com/" data-name="Coolinarika">Coolinarika</a>
+                    <a href="http://www.deviantart.com/" draggable="true" data-href="http://www.deviantart.com/" data-name="DeviantART">DeviantART</a>
+                    <a href="http://www.livescore.com/" draggable="true" data-href="http://www.livescore.com/" data-name="Live Score">Live Score</a>
                 </div>
             </section>
 
             <section class="category">
                 <h2>Filmovi i muzika</h2>
                 <div class="links">
-                    <a href="http://www.imdb.com/">IMDB</a>
-                    <a href="https://yts.ag/">Yify filmovi</a>
-                    <a href="http://www.vojvodinanet.com/">VojvodinaNET</a>
-                    <a href="http://documentaryheaven.com/">Documentary Heaven</a>
-                    <a href="http://www.divx-titlovi.com/">DivX Titlovi</a>
-                    <a href="https://www.prijevodi-online.org/">Prijevodi</a>
-                    <a href="https://music.youtube.com/">YouTube Music</a>
-                    <a href="http://www.accuradio.com/">AccuRadio</a>
-                    <a href="http://www.radiofm.rs/">Radio stanice Srbije</a>
-                    <a href="http://radio.garden/">Radio Garden</a>
-                    <a href="https://rtsplaneta.rs/">RTS Planeta</a>
-                    <a href="http://rockradio.rs/">Rock Radio Beograd</a>
+                    <a href="http://www.imdb.com/" draggable="true" data-href="http://www.imdb.com/" data-name="IMDB">IMDB</a>
+                    <a href="https://yts.ag/" draggable="true" data-href="https://yts.ag/" data-name="Yify filmovi">Yify filmovi</a>
+                    <a href="http://www.vojvodinanet.com/" draggable="true" data-href="http://www.vojvodinanet.com/" data-name="VojvodinaNET">VojvodinaNET</a>
+                    <a href="http://documentaryheaven.com/" draggable="true" data-href="http://documentaryheaven.com/" data-name="Documentary Heaven">Documentary Heaven</a>
+                    <a href="http://www.divx-titlovi.com/" draggable="true" data-href="http://www.divx-titlovi.com/" data-name="DivX Titlovi">DivX Titlovi</a>
+                    <a href="https://www.prijevodi-online.org/" draggable="true" data-href="https://www.prijevodi-online.org/" data-name="Prijevodi">Prijevodi</a>
+                    <a href="https://music.youtube.com/" draggable="true" data-href="https://music.youtube.com/" data-name="YouTube Music">YouTube Music</a>
+                    <a href="http://www.accuradio.com/" draggable="true" data-href="http://www.accuradio.com/" data-name="AccuRadio">AccuRadio</a>
+                    <a href="http://www.radiofm.rs/" draggable="true" data-href="http://www.radiofm.rs/" data-name="Radio stanice Srbije">Radio stanice Srbije</a>
+                    <a href="http://radio.garden/" draggable="true" data-href="http://radio.garden/" data-name="Radio Garden">Radio Garden</a>
+                    <a href="https://rtsplaneta.rs/" draggable="true" data-href="https://rtsplaneta.rs/" data-name="RTS Planeta">RTS Planeta</a>
+                    <a href="http://rockradio.rs/" draggable="true" data-href="http://rockradio.rs/" data-name="Rock Radio Beograd">Rock Radio Beograd</a>
                 </div>
             </section>
+
         </div>
 
         <div class="column">
             <section class="category">
                 <h2>Mediji</h2>
                 <div class="links">
-                    <a href="https://rs.n1info.com/">N1info</a>
-                    <a href="http://www.danas.rs/">Danas</a>
-                    <a href="https://www.euronews.rs/">Euronews.rs</a>
-                    <a href="http://www.politika.rs/">Politika</a>
-                    <a href="https://forbes.n1info.rs/">Forbes</a>
-                    <a href="https://radar.nova.rs/">Radar</a>
-                    <a href="http://insajder.net/">Insajder</a>
-                    <a href="https://javno.rs/">Javno</a>
-                    <a href="https://www.raskrikavanje.rs/">Raskrikavanje</a>
-                    <a href="http://balkans.aljazeera.net/">Al Jazeera</a>
-                    <a href="http://www.dw.com/sr/">DW</a>
-                    <a href="https://www.bbc.com/serbian/lat">BBC srpski</a>
-                    <a href="https://www.rt.com/">RT</a>
-                    <a href="http://www.slobodnaevropa.org/">Radio Slobodna Evropa</a>
-                    <a href="https://vreme.com/">Vreme</a>
-                    <a href="https://www.nedeljnik.rs">Nedeljnik</a>
-                    <a href="http://www.novimagazin.rs/">Novi Magazin</a>
-                    <a href="http://www.autonomija.info/">Autonomija</a>
-                    <a href="http://voice.org.rs/">VOICE</a>
-                    <a href="http://www.021.rs/">021.rs</a>
-                    <a href="https://birnsrbija.rs/">BIRN</a>
-                    <a href="https://www.krik.rs/">Krik</a>
-                    <a href="https://www.cins.rs/">CINS</a>
-                    <a href="http://pescanik.net/">Peščanik</a>
-                    <a href="http://www.cenzolovka.rs/">Cenzolovka</a>
-                    <a href="http://www.istinomer.rs/">Istinomer</a>
+                    <a href="https://rs.n1info.com/" draggable="true" data-href="https://rs.n1info.com/" data-name="N1info">N1info</a>
+                    <a href="http://www.danas.rs/" draggable="true" data-href="http://www.danas.rs/" data-name="Danas">Danas</a>
+                    <a href="https://www.euronews.rs/" draggable="true" data-href="https://www.euronews.rs/" data-name="Euronews.rs">Euronews.rs</a>
+                    <a href="http://www.politika.rs/" draggable="true" data-href="http://www.politika.rs/" data-name="Politika">Politika</a>
+                    <a href="https://forbes.n1info.rs/" draggable="true" data-href="https://forbes.n1info.rs/" data-name="Forbes">Forbes</a>
+                    <a href="https://radar.nova.rs/" draggable="true" data-href="https://radar.nova.rs/" data-name="Radar">Radar</a>
+                    <a href="http://insajder.net/" draggable="true" data-href="http://insajder.net/" data-name="Insajder">Insajder</a>
+                    <a href="https://javno.rs/" draggable="true" data-href="https://javno.rs/" data-name="Javno">Javno</a>
+                    <a href="https://www.raskrikavanje.rs/" draggable="true" data-href="https://www.raskrikavanje.rs/" data-name="Raskrikavanje">Raskrikavanje</a>
+                    <a href="http://balkans.aljazeera.net/" draggable="true" data-href="http://balkans.aljazeera.net/" data-name="Al Jazeera">Al Jazeera</a>
+                    <a href="http://www.dw.com/sr/" draggable="true" data-href="http://www.dw.com/sr/" data-name="DW">DW</a>
+                    <a href="https://www.bbc.com/serbian/lat" draggable="true" data-href="https://www.bbc.com/serbian/lat" data-name="BBC srpski">BBC srpski</a>
+                    <a href="https://www.rt.com/" draggable="true" data-href="https://www.rt.com/" data-name="RT">RT</a>
+                    <a href="http://www.slobodnaevropa.org/" draggable="true" data-href="http://www.slobodnaevropa.org/" data-name="Radio Slobodna Evropa">Radio Slobodna Evropa</a>
+                    <a href="https://vreme.com/" draggable="true" data-href="https://vreme.com/" data-name="Vreme">Vreme</a>
+                    <a href="https://www.nedeljnik.rs" draggable="true" data-href="https://www.nedeljnik.rs" data-name="Nedeljnik">Nedeljnik</a>
+                    <a href="http://www.novimagazin.rs/" draggable="true" data-href="http://www.novimagazin.rs/" data-name="Novi Magazin">Novi Magazin</a>
+                    <a href="http://www.autonomija.info/" draggable="true" data-href="http://www.autonomija.info/" data-name="Autonomija">Autonomija</a>
+                    <a href="http://voice.org.rs/" draggable="true" data-href="http://voice.org.rs/" data-name="VOICE">VOICE</a>
+                    <a href="http://www.021.rs/" draggable="true" data-href="http://www.021.rs/" data-name="021.rs">021.rs</a>
+                    <a href="https://birnsrbija.rs/" draggable="true" data-href="https://birnsrbija.rs/" data-name="BIRN">BIRN</a>
+                    <a href="https://www.krik.rs/" draggable="true" data-href="https://www.krik.rs/" data-name="Krik">Krik</a>
+                    <a href="https://www.cins.rs/" draggable="true" data-href="https://www.cins.rs/" data-name="CINS">CINS</a>
+                    <a href="http://pescanik.net/" draggable="true" data-href="http://pescanik.net/" data-name="Peščanik">Peščanik</a>
+                    <a href="http://www.cenzolovka.rs/" draggable="true" data-href="http://www.cenzolovka.rs/" data-name="Cenzolovka">Cenzolovka</a>
+                    <a href="http://www.istinomer.rs/" draggable="true" data-href="http://www.istinomer.rs/" data-name="Istinomer">Istinomer</a>
                 </div>
             </section>
 
             <section class="category">
                 <h2>Portali</h2>
                 <div class="links">
-                    <a href="http://www.b92.net/">B92</a>
-                    <a href="http://www.blic.rs/">Blic</a>
-                    <a href="http://www.novosti.rs/">Novosti</a>
-                    <a href="https://direktno.rs/">Direktno</a>
-                    <a href="http://rs.sputniknews.com/">Sputnik</a>
-                    <a href="http://www.dnevnik.rs/">Dnevnik</a>
-                    <a href="http://www.24sata.rs/">24sata</a>
-                    <a href="http://www.mondo.rs/">Mondo</a>
-                    <a href="http://www.alo.rs/">Alo</a>
-                    <a href="http://www.kurir-info.rs/">Kurir</a>
-                    <a href="https://nova.rs/">Nova.rs</a>
-                    <a href="http://www.telegraf.rs/">Telegraf</a>
-                    <a href="http://www.zurnal.rs/">Žurnal</a>
-                    <a href="http://www.pulsonline.rs/">Puls</a>
-                    <a href="http://www.rts.rs/">RTS</a>
-                    <a href="http://www.rtv.rs/">RTV</a>
-                    <a href="http://www.prva.rs/">Prva</a>
-                    <a href="http://www.krstarica.com/">Krstarica</a>
-                    <a href="http://www.serbiancafe.com/">SerbianCafe</a>
-                    <a href="http://www.naslovi.net/">Naslovi</a>
-                    <a href="https://www.netkolumne.com/">Netkolumne</a>
+                    <a href="http://www.b92.net/" draggable="true" data-href="http://www.b92.net/" data-name="B92">B92</a>
+                    <a href="http://www.blic.rs/" draggable="true" data-href="http://www.blic.rs/" data-name="Blic">Blic</a>
+                    <a href="http://www.novosti.rs/" draggable="true" data-href="http://www.novosti.rs/" data-name="Novosti">Novosti</a>
+                    <a href="https://direktno.rs/" draggable="true" data-href="https://direktno.rs/" data-name="Direktno">Direktno</a>
+                    <a href="http://rs.sputniknews.com/" draggable="true" data-href="http://rs.sputniknews.com/" data-name="Sputnik">Sputnik</a>
+                    <a href="http://www.dnevnik.rs/" draggable="true" data-href="http://www.dnevnik.rs/" data-name="Dnevnik">Dnevnik</a>
+                    <a href="http://www.24sata.rs/" draggable="true" data-href="http://www.24sata.rs/" data-name="24sata">24sata</a>
+                    <a href="http://www.mondo.rs/" draggable="true" data-href="http://www.mondo.rs/" data-name="Mondo">Mondo</a>
+                    <a href="http://www.alo.rs/" draggable="true" data-href="http://www.alo.rs/" data-name="Alo">Alo</a>
+                    <a href="http://www.kurir-info.rs/" draggable="true" data-href="http://www.kurir-info.rs/" data-name="Kurir">Kurir</a>
+                    <a href="https://nova.rs/" draggable="true" data-href="https://nova.rs/" data-name="Nova.rs">Nova.rs</a>
+                    <a href="http://www.telegraf.rs/" draggable="true" data-href="http://www.telegraf.rs/" data-name="Telegraf">Telegraf</a>
+                    <a href="http://www.zurnal.rs/" draggable="true" data-href="http://www.zurnal.rs/" data-name="Žurnal">Žurnal</a>
+                    <a href="http://www.pulsonline.rs/" draggable="true" data-href="http://www.pulsonline.rs/" data-name="Puls">Puls</a>
+                    <a href="http://www.rts.rs/" draggable="true" data-href="http://www.rts.rs/" data-name="RTS">RTS</a>
+                    <a href="http://www.rtv.rs/" draggable="true" data-href="http://www.rtv.rs/" data-name="RTV">RTV</a>
+                    <a href="http://www.prva.rs/" draggable="true" data-href="http://www.prva.rs/" data-name="Prva">Prva</a>
+                    <a href="http://www.krstarica.com/" draggable="true" data-href="http://www.krstarica.com/" data-name="Krstarica">Krstarica</a>
+                    <a href="http://www.serbiancafe.com/" draggable="true" data-href="http://www.serbiancafe.com/" data-name="SerbianCafe">SerbianCafe</a>
+                    <a href="http://www.naslovi.net/" draggable="true" data-href="http://www.naslovi.net/" data-name="Naslovi">Naslovi</a>
+                    <a href="https://www.netkolumne.com/" draggable="true" data-href="https://www.netkolumne.com/" data-name="Netkolumne">Netkolumne</a>
                 </div>
             </section>
 
             <section class="category">
                 <h2>Društvene mreže</h2>
                 <div class="links">
-                    <a href="http://www.facebook.com/">Facebook</a>
-                    <a href="http://twitter.com/">Twitter</a>
-                    <a href="https://www.linkedin.com/">LinkedIn</a>
-                    <a href="http://instagram.com/">Instagram</a>
-                    <a href="https://www.pinterest.com/">Pinterest</a>
-                    <a href="https://www.tumblr.com/">Tumblr</a>
-                    <a href="http://www.reddit.com/">Reddit</a>
-                    <a href="http://www.last.fm/">Last.fm</a>
+                    <a href="http://www.facebook.com/" draggable="true" data-href="http://www.facebook.com/" data-name="Facebook">Facebook</a>
+                    <a href="http://twitter.com/" draggable="true" data-href="http://twitter.com/" data-name="Twitter">Twitter</a>
+                    <a href="https://www.linkedin.com/" draggable="true" data-href="https://www.linkedin.com/" data-name="LinkedIn">LinkedIn</a>
+                    <a href="http://instagram.com/" draggable="true" data-href="http://instagram.com/" data-name="Instagram">Instagram</a>
+                    <a href="https://www.pinterest.com/" draggable="true" data-href="https://www.pinterest.com/" data-name="Pinterest">Pinterest</a>
+                    <a href="https://www.tumblr.com/" draggable="true" data-href="https://www.tumblr.com/" data-name="Tumblr">Tumblr</a>
+                    <a href="http://www.reddit.com/" draggable="true" data-href="http://www.reddit.com/" data-name="Reddit">Reddit</a>
+                    <a href="http://www.last.fm/" draggable="true" data-href="http://www.last.fm/" data-name="Last.fm">Last.fm</a>
                 </div>
             </section>
 
             <section class="category">
                 <h2>Kula / Vrbas</h2>
                 <div class="links">
-                    <a href="http://www.nasemesto.rs/">Naše Mesto</a>
-                    <a href="http://www.kula.rs/">Kula.rs</a>
-                    <a href="https://vrbas.net/">Vrbas.net</a>
-                    <a href="http://mindstorming.ws/izrada-sajta/">Izrada sajta</a>
-                    <a href="https://lugo.rs/">LuGo.rs</a>
+                    <a href="http://www.nasemesto.rs/" draggable="true" data-href="http://www.nasemesto.rs/" data-name="Naše Mesto">Naše Mesto</a>
+                    <a href="http://www.kula.rs/" draggable="true" data-href="http://www.kula.rs/" data-name="Kula.rs">Kula.rs</a>
+                    <a href="https://vrbas.net/" draggable="true" data-href="https://vrbas.net/" data-name="Vrbas.net">Vrbas.net</a>
+                    <a href="http://mindstorming.ws/izrada-sajta/" draggable="true" data-href="http://mindstorming.ws/izrada-sajta/" data-name="Izrada sajta">Izrada sajta</a>
+                    <a href="https://lugo.rs/" draggable="true" data-href="https://lugo.rs/" data-name="LuGo.rs">LuGo.rs</a>
                 </div>
             </section>
 
             <section class="category">
                 <h2>Razno</h2>
                 <div class="links">
-                    <a href="http://www.kupujemprodajem.com/">KupujemProdajem</a>
-                    <a href="http://www.halooglasi.com/">HaloOglasi</a>
-                    <a href="https://www.svastara.rs/">Svaštara</a>
-                    <a href="http://www.kupindo.com/">Kupindo</a>
-                    <a href="http://www.limundo.com/">Limundo</a>
-                    <a href="http://www.itvesti.info/">IT Vesti</a>
-                    <a href="https://digitalno.rs/">Digitalno</a>
-                    <a href="http://www.mobilnisvet.com/">MobilniSvet</a>
-                    <a href="http://www.benchmark.rs/">Benchmark</a>
-                    <a href="https://satplus.rs/">SAT</a>
-                    <a href="http://www.polovniautomobili.com/">Polovni Automobili</a>
-                    <a href="http://forum.burek.com/">Burek</a>
-                    <a href="http://www.elitesecurity.org/">EliteSecurity</a>
-                    <a href="http://www.yuportal.com/">YuPortal</a>
+                    <a href="http://www.kupujemprodajem.com/" draggable="true" data-href="http://www.kupujemprodajem.com/" data-name="KupujemProdajem">KupujemProdajem</a>
+                    <a href="http://www.halooglasi.com/" draggable="true" data-href="http://www.halooglasi.com/" data-name="HaloOglasi">HaloOglasi</a>
+                    <a href="https://www.svastara.rs/" draggable="true" data-href="https://www.svastara.rs/" data-name="Svaštara">Svaštara</a>
+                    <a href="http://www.kupindo.com/" draggable="true" data-href="http://www.kupindo.com/" data-name="Kupindo">Kupindo</a>
+                    <a href="http://www.limundo.com/" draggable="true" data-href="http://www.limundo.com/" data-name="Limundo">Limundo</a>
+                    <a href="http://www.itvesti.info/" draggable="true" data-href="http://www.itvesti.info/" data-name="IT Vesti">IT Vesti</a>
+                    <a href="https://digitalno.rs/" draggable="true" data-href="https://digitalno.rs/" data-name="Digitalno">Digitalno</a>
+                    <a href="http://www.mobilnisvet.com/" draggable="true" data-href="http://www.mobilnisvet.com/" data-name="MobilniSvet">MobilniSvet</a>
+                    <a href="http://www.benchmark.rs/" draggable="true" data-href="http://www.benchmark.rs/" data-name="Benchmark">Benchmark</a>
+                    <a href="https://satplus.rs/" draggable="true" data-href="https://satplus.rs/" data-name="SAT">SAT</a>
+                    <a href="http://www.polovniautomobili.com/" draggable="true" data-href="http://www.polovniautomobili.com/" data-name="Polovni Automobili">Polovni Automobili</a>
+                    <a href="http://forum.burek.com/" draggable="true" data-href="http://forum.burek.com/" data-name="Burek">Burek</a>
+                    <a href="http://www.elitesecurity.org/" draggable="true" data-href="http://www.elitesecurity.org/" data-name="EliteSecurity">EliteSecurity</a>
+                    <a href="http://www.yuportal.com/" draggable="true" data-href="http://www.yuportal.com/" data-name="YuPortal">YuPortal</a>
                 </div>
             </section>
+
         </div>
     </div>
+    <script>
+    (function () {
+      'use strict';
+      var FAV_KEY = 'kw-favorites';
+      var query = '';
+      var draggedHref = null;
+      var searchInput = document.getElementById('searchInput');
+      var searchCount = document.getElementById('searchCount');
+      var allLinks = Array.prototype.slice.call(document.querySelectorAll('.links a[href]'));
+      var allCategories = Array.prototype.slice.call(document.querySelectorAll('.category'));
+
+      function applyFilter() {
+        var q = (query || '').trim().toLowerCase();
+        var visibleCount = 0;
+        var totalCount = 0;
+        allLinks.forEach(function (a) {
+          if (a.closest('#favorites-zone')) return;
+          totalCount++;
+          if (!q) { a.classList.remove('hidden'); visibleCount++; return; }
+          var name = (a.getAttribute('data-name') || a.textContent || '').toLowerCase();
+          var href = (a.getAttribute('data-href') || a.href || '').toLowerCase();
+          var match = name.indexOf(q) !== -1 || href.indexOf(q) !== -1;
+          if (match) { a.classList.remove('hidden'); visibleCount++; } else { a.classList.add('hidden'); }
+        });
+        allCategories.forEach(function (cat) {
+          if (cat.id === 'category-moji-linkovi') return;
+          var linksContainer = cat.querySelector('.links');
+          if (!linksContainer) return;
+          var visible = linksContainer.querySelectorAll('a:not(.hidden)').length;
+          if (visible === 0 && q) { cat.classList.add('hidden-category'); } else { cat.classList.remove('hidden-category'); }
+        });
+        if (q) { searchCount.textContent = visibleCount + ' / ' + totalCount; } else { searchCount.textContent = ''; }
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('input', function () { query = this.value; applyFilter(); });
+      }
+
+      var favZone = document.getElementById('favorites-zone');
+      var favSection = document.getElementById('category-moji-linkovi');
+      var resetBtn = document.getElementById('resetFavorites');
+
+      function loadFavorites() {
+        try { var raw = localStorage.getItem(FAV_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+      }
+      function saveFavorites(favs) {
+        try { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); } catch (e) {}
+      }
+      function renderFavorites() {
+        var favs = loadFavorites();
+        while (favZone.firstChild) favZone.removeChild(favZone.firstChild);
+        if (favs.length === 0) {
+          var empty = document.createElement('p');
+          empty.className = 'empty-message';
+          empty.id = 'favorites-empty';
+          empty.textContent = 'Ovde prevucite omiljene linkove';
+          favZone.appendChild(empty);
+          favSection.setAttribute('data-empty', 'true');
+        } else {
+          favs.forEach(function (f) { favZone.appendChild(createFavNode(f.href, f.name)); });
+          favSection.setAttribute('data-empty', 'false');
+        }
+      }
+      function createFavNode(href, name) {
+        var a = document.createElement('a');
+        a.href = href; a.textContent = name;
+        a.setAttribute('draggable', 'true');
+        a.setAttribute('data-href', href);
+        a.setAttribute('data-name', name);
+        a.className = 'favorite-link';
+        a.setAttribute('data-favorite', 'true');
+        a.addEventListener('dblclick', function (e) { e.preventDefault(); removeFavorite(href); });
+        a.title = name + '  —  (dupli klik za uklanjanje)';
+        return a;
+      }
+      function addFavorite(href, name) {
+        var favs = loadFavorites();
+        for (var i = 0; i < favs.length; i++) if (favs[i].href === href) return;
+        favs.push({ href: href, name: name });
+        saveFavorites(favs); renderFavorites();
+      }
+      function removeFavorite(href) {
+        var favs = loadFavorites();
+        saveFavorites(favs.filter(function (f) { return f.href !== href; }));
+        renderFavorites();
+      }
+
+      document.addEventListener('dragstart', function (e) {
+        var t = e.target;
+        if (t && t.tagName === 'A' && t.hasAttribute('data-href')) {
+          draggedHref = t.getAttribute('data-href');
+          var name = t.getAttribute('data-name') || t.textContent || '';
+          try {
+            e.dataTransfer.setData('text/plain', draggedHref);
+            e.dataTransfer.setData('application/x-kw-link', JSON.stringify({ href: draggedHref, name: name }));
+            e.dataTransfer.effectAllowed = 'copyMove';
+          } catch (err) {}
+          t.classList.add('dragging');
+        }
+      });
+      document.addEventListener('dragend', function (e) {
+        var t = e.target;
+        if (t && t.classList) t.classList.remove('dragging');
+        document.querySelectorAll('.drop-target').forEach(function (n) { n.classList.remove('drop-target'); });
+        draggedHref = null;
+      });
+      if (favZone) {
+        favZone.addEventListener('dragover', function (e) {
+          e.preventDefault(); e.dataTransfer.dropEffect = 'copy';
+          favZone.classList.add('drop-target');
+        });
+        favZone.addEventListener('dragleave', function (e) {
+          if (!favZone.contains(e.relatedTarget)) favZone.classList.remove('drop-target');
+        });
+        favZone.addEventListener('drop', function (e) {
+          e.preventDefault();
+          favZone.classList.remove('drop-target');
+          var href = null, name = null;
+          try {
+            var raw = e.dataTransfer.getData('application/x-kw-link');
+            if (raw) { var obj = JSON.parse(raw); href = obj.href; name = obj.name; }
+          } catch (err) {}
+          if (!href) href = e.dataTransfer.getData('text/plain');
+          if (!href) href = draggedHref;
+          if (!name) {
+            var src = document.querySelector('a[data-href="' + href + '"]');
+            if (src) name = src.getAttribute('data-name') || src.textContent;
+          }
+          if (href && name) addFavorite(href, name);
+        });
+      }
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          if (loadFavorites().length === 0) return;
+          if (confirm('Obriši sve iz "Moji linkovi"?\n\nBiće trajno uklonjeno sa ovog uređaja.')) {
+            saveFavorites([]); renderFavorites();
+          }
+        });
+      }
+      renderFavorites();
+    })();
+    </script>
 </body>
 </html>
