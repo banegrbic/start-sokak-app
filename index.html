@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260607d" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260607q" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -44,8 +44,23 @@
     <div class="toolbar">
         <input type="search" id="searchInput" class="search-input" placeholder="🔍 Filtriraj linkove..." aria-label="Filtriraj linkove" autocomplete="off" />
         <span id="searchCount" class="search-count" aria-live="polite"></span>
+        <button type="button" id="addCustomBtn" class="add-custom-btn" title="Dodaj novi custom link">＋ Dodaj link</button>
         <button type="button" id="showAllBtn" class="reset-favorites" title="Prikaži sve sakrivene kategorije">Prikaži sve</button>
         <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje</button>
+    </div>
+    <!-- Modal: Add custom link -->
+    <div id="addCustomModal" class="modal-overlay" hidden>
+      <div class="modal-box" role="dialog" aria-labelledby="addCustomTitle" aria-modal="true">
+        <h3 id="addCustomTitle">＋ Dodaj custom link</h3>
+        <form id="addCustomForm" class="custom-link-form">
+            <input type="text" name="name" placeholder="Naziv (npr. Moj Blog)" required maxlength="40" autocomplete="off" />
+            <input type="text" name="url" placeholder="URL (npr. https://mojblog.rs)" required autocomplete="off" />
+            <div class="modal-actions">
+              <button type="button" id="addCustomCancel" class="modal-cancel">Otkaži</button>
+              <button type="submit" class="modal-submit">＋ Dodaj</button>
+            </div>
+        </form>
+      </div>
     </div>
     <main class="main-container" id="categoriesContainer">
         <section class="category" id="category-moji-linkovi" data-category-name="Moji linkovi">
@@ -56,21 +71,6 @@
           </header>
           <div class="links" data-special="favorites" data-drop-zone="true">
             <p class="empty-message" data-empty>Ovde prevucite omiljene linkove</p>
-          </div>
-        </section>
-        <section class="category" id="category-custom-linkovi" data-category-name="Custom linkovi">
-          <header class="category-header">
-            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>＋ Custom linkovi <span class="hint">Tvoji linkovi · Dodaj ispod</span></h2>
-            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
-          </header>
-          <div class="links" data-special="custom" data-drop-zone="true">
-            <form class="custom-link-form" data-custom-form>
-              <input type="text" name="name" placeholder="Naziv" required maxlength="40" />
-              <input type="url" name="url" placeholder="https://..." required />
-              <button type="submit">＋ Dodaj</button>
-            </form>
-            <p class="empty-message" data-empty>Još nema custom linkova. Dodaj prvi iznad ↑</p>
           </div>
         </section>
         <section class="category" id="category-pretraga-i-posta" data-category-name="Pretraga i pošta">
@@ -342,11 +342,9 @@
         searchInput.addEventListener('input', function () { query = this.value; applyFilter(); });
       }
 
-      // ========== CATEGORY ORDER (custom drag-drop, no Sortable) ==========
-      // We avoid Sortable.js to prevent it from intercepting clicks on
-      // visibility-toggle buttons and form inputs.
-      var dragState = null; // {section, placeholder, startY, offsetY}
-
+      // ========== CATEGORY ORDER (Sortable.js with forceFallback) ==========
+      // forceFallback: true avoids native HTML5 drag, which is more reliable
+      // and doesn't interfere with clicks on visibility-toggle buttons.
       function saveOrder() {
         var order = [];
         document.querySelectorAll('.category').forEach(function (s) { order.push(getCategoryId(s)); });
@@ -360,99 +358,30 @@
           if (el) container.appendChild(el);
         });
       }
-
-      function onPointerDownDragHandle(e) {
-        var handle = e.target.closest('.drag-handle');
-        if (!handle) return;
-        // CRITICAL: do NOT call preventDefault here for buttons inside the handle
-        // (like our visibility-toggle). Only block default for the drag-handle itself.
-        if (e.target.closest('.visibility-toggle, input, button, form')) return;
-        var section = handle.closest('.category');
-        if (!section) return;
-        // Only left mouse button or touch/pen
-        if (e.button !== undefined && e.button !== 0 && e.pointerType === 'mouse') return;
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        var rect = section.getBoundingClientRect();
-        var placeholder = document.createElement('div');
-        placeholder.className = 'category-placeholder';
-        placeholder.style.height = rect.height + 'px';
-
-        dragState = {
-          section: section,
-          placeholder: placeholder,
-          startY: e.clientY,
-          offsetY: 0,
-          moved: false
-        };
-        section.classList.add('is-dragging');
-        section.parentNode.insertBefore(placeholder, section);
-
-        function onMove(ev) {
-          if (!dragState) return;
-          var clientY = ev.clientY !== undefined ? ev.clientY : (ev.touches && ev.touches[0] ? ev.touches[0].clientY : 0);
-          var dy = clientY - dragState.startY;
-          dragState.offsetY = dy;
-          dragState.moved = true;
-          // Move the dragged section visually
-          dragState.section.style.transform = 'translateY(' + dy + 'px)';
-          dragState.section.style.zIndex = '1000';
-          dragState.section.style.pointerEvents = 'none';
-
-          // Find new position
-          var placeholderParent = dragState.placeholder.parentNode;
-          var siblings = Array.prototype.slice.call(placeholderParent.querySelectorAll('.category:not(.is-dragging)'));
-          var newBefore = null;
-          for (var i = 0; i < siblings.length; i++) {
-            var s = siblings[i];
-            var sr = s.getBoundingClientRect();
-            var smid = sr.top + sr.height / 2;
-            if (clientY < smid) { newBefore = s; break; }
+      Sortable.create(container, {
+        animation: 180,
+        handle: '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        forceFallback: true,
+        fallbackOnBody: true,
+        fallbackTolerance: 3,
+        delay: 0,
+        delayOnTouchOnly: true,
+        // Allow clicks on visibility-toggle + form elements to pass through
+        onMove: function (evt) {
+          // Don't drag if hovering interactive elements (visibility button, form inputs)
+          if (evt.originalEvent && evt.originalEvent.target) {
+            var t = evt.originalEvent.target;
+            if (t.closest && t.closest('.visibility-toggle, input, button, form, .modal-overlay')) {
+              return false; // cancel drag
+            }
           }
-          if (newBefore) {
-            placeholderParent.insertBefore(dragState.placeholder, newBefore);
-          } else {
-            placeholderParent.appendChild(dragState.placeholder);
-          }
-        }
-
-        function onEnd() {
-          document.removeEventListener('pointermove', onMove);
-          document.removeEventListener('mousemove', onMove);
-          document.removeEventListener('touchmove', onMove);
-          document.removeEventListener('pointerup', onEnd);
-          document.removeEventListener('mouseup', onEnd);
-          document.removeEventListener('touchend', onEnd);
-          if (!dragState) return;
-          var ds = dragState;
-          dragState = null;
-          ds.section.style.transform = '';
-          ds.section.style.zIndex = '';
-          ds.section.style.pointerEvents = '';
-          ds.section.classList.remove('is-dragging');
-          if (ds.moved) {
-            // Replace placeholder with the section
-            ds.placeholder.parentNode.insertBefore(ds.section, ds.placeholder);
-            ds.placeholder.remove();
-            saveOrder();
-          } else {
-            ds.placeholder.remove();
-          }
-        }
-
-        document.addEventListener('pointermove', onMove);
-        document.addEventListener('mousemove', onMove);
-        document.addEventListener('touchmove', onMove, { passive: false });
-        document.addEventListener('pointerup', onEnd);
-        document.addEventListener('mouseup', onEnd);
-        document.addEventListener('touchend', onEnd);
-      }
-      // Use pointerdown on container with capture so it fires before any other listener
-      document.addEventListener('pointerdown', onPointerDownDragHandle, true);
-      document.addEventListener('mousedown', onPointerDownDragHandle, true);
-      document.addEventListener('touchstart', onPointerDownDragHandle, true);
+          return true;
+        },
+        onEnd: function () { saveOrder(); }
+      });
 
       // ========== VISIBILITY TOGGLE ==========
       function saveHidden() {
@@ -611,79 +540,127 @@
         document.querySelectorAll('.drop-target').forEach(function (n) { n.classList.remove('drop-target'); });
       });
 
-      // ========== CUSTOM LINKS ==========
-      var customSection = document.getElementById('category-custom-linkovi');
-      var customZone = customSection ? customSection.querySelector('[data-special="custom"]') : null;
-      var customEmpty = customSection ? customSection.querySelector('[data-empty]') : null;
-      var customForm = customSection ? customSection.querySelector('[data-custom-form]') : null;
+      // ========== CUSTOM LINKS (dynamic, hidden when empty) ==========
+      var customSection = null; // created dynamically
+      var customZone = null;
+      var customSortable = null;
 
       function loadCustom() { return load(CUSTOM_KEY, []); }
       function saveCustom(c) { save(CUSTOM_KEY, c); }
-      function renderCustom() {
-        var items = loadCustom();
-        if (!customZone) return;
-        Array.prototype.slice.call(customZone.querySelectorAll('a.fav-item')).forEach(function (a) { a.remove(); });
-        if (items.length === 0) {
-          if (customEmpty) customEmpty.style.display = '';
-          if (customSection) customSection.classList.add('forced-visible-empty');
-        } else {
-          if (customEmpty) customEmpty.style.display = 'none';
-          items.forEach(function (f) { customZone.insertBefore(createFavNode(f.href, f.name), customForm); });
-          if (customSection) customSection.classList.remove('forced-visible-empty');
-        }
-      }
-      function addCustom(href, name) {
-        var items = loadCustom();
-        for (var i = 0; i < items.length; i++) if (items[i].href === href) return;
-        items.push({ href: href, name: name });
-        saveCustom(items); renderCustom();
-      }
-      function removeCustom(href) {
-        saveCustom(loadCustom().filter(function (f) { return f.href !== href; }));
-        renderCustom();
-      }
-      if (customForm) {
-        // Prevent Sortable.js from intercepting events on the form
-        customForm.addEventListener('mousedown', function (e) { e.stopPropagation(); }, true);
-        customForm.addEventListener('click', function (e) { e.stopPropagation(); }, true);
-        customForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          var nameInput = customForm.querySelector('input[name="name"]');
-          var urlInput = customForm.querySelector('input[name="url"]');
-          var name = (nameInput.value || '').trim();
-          var url = (urlInput.value || '').trim();
-          if (!name || !url) return;
-          if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-          addCustom(url, name);
-          nameInput.value = '';
-          urlInput.value = '';
-          nameInput.focus();
-        });
-      }
-      if (customZone) {
-        // Custom drag-drop for custom links (similar to categories)
-        // (we keep it simple - just reorder without complex feedback)
-        // Use Sortable.js - it works fine here since there's no button inside customZone
-        Sortable.create(customZone, {
+      function ensureCustomSection() {
+        if (customSection && document.body.contains(customSection)) return customSection;
+        // Create new section element
+        customSection = document.createElement('section');
+        customSection.className = 'category';
+        customSection.id = 'category-custom-linkovi';
+        customSection.setAttribute('data-category-name', 'Custom linkovi');
+        customSection.innerHTML =
+          '<header class="category-header">' +
+            '<button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>' +
+            '<h2>＋ Custom linkovi <span class="count" data-count></span></h2>' +
+            '<button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>' +
+          '</header>' +
+          '<div class="links" data-special="custom" data-drop-zone="true"></div>';
+        container.insertBefore(customSection, document.getElementById('category-moji-linkovi').nextSibling);
+        customZone = customSection.querySelector('[data-special="custom"]');
+        // Make sortable for reordering
+        if (customSortable) customSortable.destroy();
+        customSortable = Sortable.create(customZone, {
           animation: 180,
           ghostClass: 'sortable-ghost',
-          filter: '.empty-message, .custom-link-form',
           onEnd: function () {
             var order = [];
             Array.prototype.slice.call(customZone.querySelectorAll('a.fav-item')).forEach(function (a) {
               order.push({ href: a.getAttribute('data-href'), name: a.getAttribute('data-name') });
             });
             saveCustom(order);
-            renderCustom();
           }
         });
-        // Update delete on dblclick for custom items
+        // dblclick to remove
         customZone.addEventListener('dblclick', function (e) {
           var t = e.target.closest('a.fav-item');
           if (t) { e.preventDefault(); removeCustom(t.getAttribute('data-href')); }
         });
+        // update count
+        var countEl = customSection.querySelector('[data-count]');
+        if (countEl) {
+          var n = customZone.querySelectorAll('a.fav-item').length;
+          countEl.textContent = '(' + n + ')';
+        }
+        return customSection;
       }
+      function renderCustom() {
+        var items = loadCustom();
+        if (items.length === 0) {
+          // Remove the section entirely
+          if (customSection && customSection.parentNode) {
+            customSection.parentNode.removeChild(customSection);
+          }
+          if (customSortable) { customSortable.destroy(); customSortable = null; }
+          customSection = null; customZone = null;
+          return;
+        }
+        ensureCustomSection();
+        // Re-render links
+        Array.prototype.slice.call(customZone.querySelectorAll('a.fav-item')).forEach(function (a) { a.remove(); });
+        items.forEach(function (f) { customZone.appendChild(createFavNode(f.href, f.name)); });
+        // Update count
+        var countEl = customSection.querySelector('[data-count]');
+        if (countEl) countEl.textContent = '(' + items.length + ')';
+      }
+      function addCustom(href, name) {
+        var items = loadCustom();
+        for (var i = 0; i < items.length; i++) if (items[i].href === href) return;
+        items.push({ href: href, name: name });
+        saveCustom(items);
+        renderCustom();
+      }
+      function removeCustom(href) {
+        var newItems = loadCustom().filter(function (f) { return f.href !== href; });
+        saveCustom(newItems);
+        renderCustom();
+      }
+
+      // ========== MODAL: Add custom link ==========
+      var addCustomModal = document.getElementById('addCustomModal');
+      var addCustomBtn = document.getElementById('addCustomBtn');
+      var addCustomForm = document.getElementById('addCustomForm');
+      var addCustomCancel = document.getElementById('addCustomCancel');
+      function openAddCustom() {
+        if (!addCustomModal) return;
+        addCustomModal.hidden = false;
+        var nameInput = addCustomForm.querySelector('input[name="name"]');
+        setTimeout(function () { nameInput.focus(); }, 50);
+      }
+      function closeAddCustom() {
+        if (!addCustomModal) return;
+        addCustomModal.hidden = true;
+        addCustomForm.reset();
+      }
+      if (addCustomBtn) addCustomBtn.addEventListener('click', openAddCustom);
+      if (addCustomCancel) addCustomCancel.addEventListener('click', closeAddCustom);
+      if (addCustomModal) {
+        addCustomModal.addEventListener('click', function (e) {
+          if (e.target === addCustomModal) closeAddCustom();
+        });
+      }
+      if (addCustomForm) {
+        addCustomForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var nameInput = addCustomForm.querySelector('input[name="name"]');
+          var urlInput = addCustomForm.querySelector('input[name="url"]');
+          var name = (nameInput.value || '').trim();
+          var url = (urlInput.value || '').trim();
+          if (!name || !url) return;
+          if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+          addCustom(url, name);
+          closeAddCustom();
+        });
+      }
+      // Close on Escape
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && addCustomModal && !addCustomModal.hidden) closeAddCustom();
+      });
 
       // ========== INITIALIZE ==========
       applySavedOrder();
