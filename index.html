@@ -359,10 +359,11 @@
       Sortable.create(container, {
         animation: 180,
         handle: '.drag-handle',
+        filter: '.visibility-toggle, input, button[data-visibility-toggle]',
+        preventOnFilter: false,
         ghostClass: 'sortable-ghost',
         chosenClass: 'sortable-chosen',
         dragClass: 'sortable-drag',
-        forceFallback: false,
         delay: 150,
         delayOnTouchOnly: true,
         onEnd: function () { saveOrder(); }
