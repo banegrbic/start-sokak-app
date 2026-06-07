@@ -560,7 +560,7 @@ body {
 
 /* Desktop & laptop: 2 kolone za kategorije */
 @media (min-width: 900px) {
-  .kategorije {
+  #categoriesContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
