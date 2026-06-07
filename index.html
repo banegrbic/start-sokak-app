@@ -6,11 +6,49 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20251231" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260607" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script>
+      // Apply saved theme ASAP to avoid flash (FOUC)
+      (function () {
+        try {
+          var saved = localStorage.getItem('kw-theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', saved);
+          }
+        } catch (e) { /* localStorage may be blocked; ignore */ }
+      })();
+    </script>
 </head>
 <body>
+    <button type="button" id="themeToggle" class="theme-toggle" aria-label="Prebaci temu" title="Prebaci između tamne i svetle teme"></button>
+    <script>
+      (function () {
+        var btn = document.getElementById('themeToggle');
+        function current() {
+          return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        }
+        function apply(theme) {
+          if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          } else {
+            document.documentElement.removeAttribute('data-theme');
+          }
+          try { localStorage.setItem('kw-theme', theme); } catch (e) {}
+          if (btn) {
+            btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+          }
+        }
+        // Sync aria-pressed with whatever was applied by the early script
+        if (btn) {
+          btn.setAttribute('aria-pressed', current() === 'light' ? 'true' : 'false');
+          btn.addEventListener('click', function () {
+            apply(current() === 'light' ? 'dark' : 'light');
+          });
+        }
+      })();
+    </script>
     <div class="main-container">
         <div class="column">
             <section class="category">
