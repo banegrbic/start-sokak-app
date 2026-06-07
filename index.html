@@ -398,10 +398,32 @@
           }
         });
       }
+      document.addEventListener('mousedown', function (e) {
+        if (e.target.closest('[data-visibility-toggle]')) {
+          e.stopPropagation();
+        }
+      }, true);
+      document.addEventListener('touchstart', function (e) {
+        if (e.target.closest('[data-visibility-toggle]')) {
+          e.stopPropagation();
+        }
+      }, true);
+      // Block Sortable from intercepting clicks on input fields + form buttons
+      document.addEventListener('mousedown', function (e) {
+        if (e.target.closest('input, button[type="submit"], .custom-link-form')) {
+          e.stopPropagation();
+        }
+      }, false);
+      document.addEventListener('touchstart', function (e) {
+        if (e.target.closest('input, button[type="submit"], .custom-link-form')) {
+          e.stopPropagation();
+        }
+      }, false);
       document.addEventListener('click', function (e) {
         var btn = e.target.closest('[data-visibility-toggle]');
         if (!btn) return;
         e.preventDefault();
+        e.stopPropagation();
         var cat = btn.closest('.category');
         cat.classList.toggle('is-hidden');
         saveHidden();
