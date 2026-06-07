@@ -340,6 +340,12 @@ body {
   transform: translateY(-1px);
 }
 
+.links a.fav-item:active {
+  background-color: #d9534f;
+  transform: scale(0.96);
+  transition: transform 0.1s;
+}
+
 .category {
   background-color: var(--secondary-bg);
   border-radius: var(--radius);
