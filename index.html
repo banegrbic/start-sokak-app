@@ -6,18 +6,18 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260607c" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260607d" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <script>
-      // Apply saved theme ASAP to avoid flash (FOUC)
       (function () {
         try {
           var saved = localStorage.getItem('kw-theme');
           if (saved === 'light' || saved === 'dark') {
             document.documentElement.setAttribute('data-theme', saved);
           }
-        } catch (e) { /* localStorage may be blocked; ignore */ }
+        } catch (e) {}
       })();
     </script>
 </head>
@@ -30,44 +30,60 @@
           return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
         }
         function apply(theme) {
-          if (theme === 'light') {
-            document.documentElement.setAttribute('data-theme', 'light');
-          } else {
-            document.documentElement.removeAttribute('data-theme');
-          }
+          if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+          else document.documentElement.removeAttribute('data-theme');
           try { localStorage.setItem('kw-theme', theme); } catch (e) {}
-          if (btn) {
-            btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
-          }
+          if (btn) btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
         }
         if (btn) {
           btn.setAttribute('aria-pressed', current() === 'light' ? 'true' : 'false');
-          btn.addEventListener('click', function () {
-            apply(current() === 'light' ? 'dark' : 'light');
-          });
+          btn.addEventListener('click', function () { apply(current() === 'light' ? 'dark' : 'light'); });
         }
       })();
     </script>
     <div class="toolbar">
         <input type="search" id="searchInput" class="search-input" placeholder="🔍 Filtriraj linkove..." aria-label="Filtriraj linkove" autocomplete="off" />
         <span id="searchCount" class="search-count" aria-live="polite"></span>
-        <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje linkove</button>
+        <button type="button" id="showAllBtn" class="reset-favorites" title="Prikaži sve sakrivene kategorije">Prikaži sve</button>
+        <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje</button>
     </div>
-    <div class="main-container">
-        <div class="column">
-            <section class="category" id="category-moji-linkovi" data-category="Moji linkovi" data-empty="true">
-                <h2>★ Moji linkovi <span class="hint">(prevuci ovde)</span></h2>
-                <div class="links" id="favorites-zone" data-drop-zone="true" aria-label="Zona za prevlačenje omiljenih linkova">
-                    <p class="empty-message" id="favorites-empty">Ovde prevucite omiljene linkove</p>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Pretraga i pošta</h2>
-                <div class="links">
+    <main class="main-container" id="categoriesContainer">
+        <section class="category" id="category-moji-linkovi" data-category-name="Moji linkovi">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>★ Moji linkovi <span class="hint">Dupli klik na link = ukloni · Prevuci za redosled</span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links" data-special="favorites" data-drop-zone="true">
+            <p class="empty-message" data-empty>Ovde prevucite omiljene linkove</p>
+          </div>
+        </section>
+        <section class="category" id="category-custom-linkovi" data-category-name="Custom linkovi">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>＋ Custom linkovi <span class="hint">Tvoji linkovi · Dodaj ispod</span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links" data-special="custom" data-drop-zone="true">
+            <form class="custom-link-form" data-custom-form>
+              <input type="text" name="name" placeholder="Naziv" required maxlength="40" />
+              <input type="url" name="url" placeholder="https://..." required />
+              <button type="submit">＋ Dodaj</button>
+            </form>
+            <p class="empty-message" data-empty>Još nema custom linkova. Dodaj prvi iznad ↑</p>
+          </div>
+        </section>
+        <section class="category" id="category-pretraga-i-posta" data-category-name="Pretraga i pošta">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Pretraga i pošta <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
                     <a href="http://www.google.com/" draggable="true" data-href="http://www.google.com/" data-name="Google">Google</a>
                     <a href="http://www.gmail.com/" draggable="true" data-href="http://www.gmail.com/" data-name="Gmail">Gmail</a>
-                    <a href="http://www.youtube.com/" draggable="true" data-href="http://www.youtube.com/" data-name="YouTube">YouTube</a>                    <a href="http://mail.yahoo.com/" draggable="true" data-href="http://mail.yahoo.com/" data-name="Yahoo Mail">Yahoo Mail</a>
+                    <a href="http://www.youtube.com/" draggable="true" data-href="http://www.youtube.com/" data-name="YouTube">YouTube</a>
+                    <a href="http://mail.yahoo.com/" draggable="true" data-href="http://mail.yahoo.com/" data-name="Yahoo Mail">Yahoo Mail</a>
                     <a href="http://www.bing.com/" draggable="true" data-href="http://www.bing.com/" data-name="Bing">Bing</a>
                     <a href="http://en.wikipedia.org/wiki/Main_Page" draggable="true" data-href="http://en.wikipedia.org/wiki/Main_Page" data-name="Wikipedia">Wikipedia</a>
                     <a href="http://sr.wikipedia.org/sr" draggable="true" data-href="http://sr.wikipedia.org/sr" data-name="Wikipedia-rs">Wikipedia-rs</a>
@@ -75,12 +91,15 @@
                     <a href="https://search.brave.com/" draggable="true" data-href="https://search.brave.com/" data-name="Brave Search">Brave Search</a>
                     <a href="https://chat.openai.com/chat" draggable="true" data-href="https://chat.openai.com/chat" data-name="ChatGPT">ChatGPT</a>
                     <a href="https://mail.proton.me/" draggable="true" data-href="https://mail.proton.me/" data-name="ProtonMail">ProtonMail</a>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Globalni servisi</h2>
-                <div class="links">
+          </div>
+        </section>
+        <section class="category" id="category-globalni-servisi" data-category-name="Globalni servisi">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Globalni servisi <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
                     <a href="http://translate.google.com/" draggable="true" data-href="http://translate.google.com/" data-name="Translate">Translate</a>
                     <a href="https://www.google.com/drive/" draggable="true" data-href="https://www.google.com/drive/" data-name="Drive">Drive</a>
                     <a href="https://www.dropbox.com/" draggable="true" data-href="https://www.dropbox.com/" data-name="Dropbox">Dropbox</a>
@@ -95,12 +114,15 @@
                     <a href="https://imgur.com/" draggable="true" data-href="https://imgur.com/" data-name="Imgur">Imgur</a>
                     <a href="http://www.filehippo.com/" draggable="true" data-href="http://www.filehippo.com/" data-name="FileHippo">FileHippo</a>
                     <a href="http://thepiratebay.org/" draggable="true" data-href="http://thepiratebay.org/" data-name="ThePirateBay">ThePirateBay</a>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Domaći servisi</h2>
-                <div class="links">
+          </div>
+        </section>
+        <section class="category" id="category-domaci-servisi" data-category-name="Domaći servisi">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Domaći servisi <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
                     <a href="https://moj.esdnevnik.rs/login" draggable="true" data-href="https://moj.esdnevnik.rs/login" data-name="moj esDnevnik">moj esDnevnik</a>
                     <a href="https://11811.rs/" draggable="true" data-href="https://11811.rs/" data-name="Bele strane">Bele strane</a>
                     <a href="http://www.infostud.com/" draggable="true" data-href="http://www.infostud.com/" data-name="Infostud">Infostud</a>
@@ -109,13 +131,17 @@
                     <a href="http://www.weather2umbrella.com/" draggable="true" data-href="http://www.weather2umbrella.com/" data-name="Weather2Umbrella">Weather2Umbrella</a>
                     <a href="http://tv.aladin.info/" draggable="true" data-href="http://tv.aladin.info/" data-name="TV program">TV program</a>
                     <a href="https://eon.tv/" draggable="true" data-href="https://eon.tv/" data-name="EON">EON</a>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Zabava</h2>
-                <div class="links">
-                    <a href="http://www.njuz.net/" draggable="true" data-href="http://www.njuz.net/" data-name="Njuz">Njuz</a>                    <a href="http://ispovesti.com/" draggable="true" data-href="http://ispovesti.com/" data-name="Ispovesti">Ispovesti</a>
+          </div>
+        </section>
+        <section class="category" id="category-zabava" data-category-name="Zabava">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Zabava <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
+                    <a href="http://www.njuz.net/" draggable="true" data-href="http://www.njuz.net/" data-name="Njuz">Njuz</a>
+                    <a href="http://ispovesti.com/" draggable="true" data-href="http://ispovesti.com/" data-name="Ispovesti">Ispovesti</a>
                     <a href="http://vukajlija.com/" draggable="true" data-href="http://vukajlija.com/" data-name="Vukajlija">Vukajlija</a>
                     <a href="http://www.igrice123.rs/" draggable="true" data-href="http://www.igrice123.rs/" data-name="Igrice123">Igrice123</a>
                     <a href="http://www.travian.rs/" draggable="true" data-href="http://www.travian.rs/" data-name="Travian">Travian</a>
@@ -123,12 +149,15 @@
                     <a href="http://www.coolinarika.com/" draggable="true" data-href="http://www.coolinarika.com/" data-name="Coolinarika">Coolinarika</a>
                     <a href="http://www.deviantart.com/" draggable="true" data-href="http://www.deviantart.com/" data-name="DeviantART">DeviantART</a>
                     <a href="http://www.livescore.com/" draggable="true" data-href="http://www.livescore.com/" data-name="Live Score">Live Score</a>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Filmovi i muzika</h2>
-                <div class="links">
+          </div>
+        </section>
+        <section class="category" id="category-filmovi-i-muzika" data-category-name="Filmovi i muzika">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Filmovi i muzika <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
                     <a href="http://www.imdb.com/" draggable="true" data-href="http://www.imdb.com/" data-name="IMDB">IMDB</a>
                     <a href="https://yts.ag/" draggable="true" data-href="https://yts.ag/" data-name="Yify filmovi">Yify filmovi</a>
                     <a href="http://www.vojvodinanet.com/" draggable="true" data-href="http://www.vojvodinanet.com/" data-name="VojvodinaNET">VojvodinaNET</a>
@@ -141,22 +170,24 @@
                     <a href="http://radio.garden/" draggable="true" data-href="http://radio.garden/" data-name="Radio Garden">Radio Garden</a>
                     <a href="https://rtsplaneta.rs/" draggable="true" data-href="https://rtsplaneta.rs/" data-name="RTS Planeta">RTS Planeta</a>
                     <a href="http://rockradio.rs/" draggable="true" data-href="http://rockradio.rs/" data-name="Rock Radio Beograd">Rock Radio Beograd</a>
-                </div>
-            </section>
-
-        </div>
-
-        <div class="column">
-            <section class="category">
-                <h2>Mediji</h2>
-                <div class="links">
+          </div>
+        </section>
+        <section class="category" id="category-mediji" data-category-name="Mediji">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Mediji <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
                     <a href="https://rs.n1info.com/" draggable="true" data-href="https://rs.n1info.com/" data-name="N1info">N1info</a>
                     <a href="http://www.danas.rs/" draggable="true" data-href="http://www.danas.rs/" data-name="Danas">Danas</a>
                     <a href="https://www.euronews.rs/" draggable="true" data-href="https://www.euronews.rs/" data-name="Euronews.rs">Euronews.rs</a>
                     <a href="http://www.politika.rs/" draggable="true" data-href="http://www.politika.rs/" data-name="Politika">Politika</a>
                     <a href="https://forbes.n1info.rs/" draggable="true" data-href="https://forbes.n1info.rs/" data-name="Forbes">Forbes</a>
                     <a href="https://radar.nova.rs/" draggable="true" data-href="https://radar.nova.rs/" data-name="Radar">Radar</a>
-                    <a href="http://insajder.net/" draggable="true" data-href="http://insajder.net/" data-name="Insajder">Insajder</a>                    <a href="https://www.raskrikavanje.rs/" draggable="true" data-href="https://www.raskrikavanje.rs/" data-name="Raskrikavanje">Raskrikavanje</a>                    <a href="http://www.dw.com/sr/" draggable="true" data-href="http://www.dw.com/sr/" data-name="DW">DW</a>
+                    <a href="http://insajder.net/" draggable="true" data-href="http://insajder.net/" data-name="Insajder">Insajder</a>
+                    <a href="https://www.raskrikavanje.rs/" draggable="true" data-href="https://www.raskrikavanje.rs/" data-name="Raskrikavanje">Raskrikavanje</a>
+                    <a href="http://www.dw.com/sr/" draggable="true" data-href="http://www.dw.com/sr/" data-name="DW">DW</a>
                     <a href="https://www.bbc.com/serbian/lat" draggable="true" data-href="https://www.bbc.com/serbian/lat" data-name="BBC srpski">BBC srpski</a>
                     <a href="https://www.rt.com/" draggable="true" data-href="https://www.rt.com/" data-name="RT">RT</a>
                     <a href="http://www.slobodnaevropa.org/" draggable="true" data-href="http://www.slobodnaevropa.org/" data-name="Radio Slobodna Evropa">Radio Slobodna Evropa</a>
@@ -172,12 +203,15 @@
                     <a href="http://pescanik.net/" draggable="true" data-href="http://pescanik.net/" data-name="Peščanik">Peščanik</a>
                     <a href="http://www.cenzolovka.rs/" draggable="true" data-href="http://www.cenzolovka.rs/" data-name="Cenzolovka">Cenzolovka</a>
                     <a href="http://www.istinomer.rs/" draggable="true" data-href="http://www.istinomer.rs/" data-name="Istinomer">Istinomer</a>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Portali</h2>
-                <div class="links">
+          </div>
+        </section>
+        <section class="category" id="category-portali" data-category-name="Portali">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Portali <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
                     <a href="http://www.b92.net/" draggable="true" data-href="http://www.b92.net/" data-name="B92">B92</a>
                     <a href="http://www.blic.rs/" draggable="true" data-href="http://www.blic.rs/" data-name="Blic">Blic</a>
                     <a href="http://www.novosti.rs/" draggable="true" data-href="http://www.novosti.rs/" data-name="Novosti">Novosti</a>
@@ -199,12 +233,15 @@
                     <a href="http://www.serbiancafe.com/" draggable="true" data-href="http://www.serbiancafe.com/" data-name="SerbianCafe">SerbianCafe</a>
                     <a href="http://www.naslovi.net/" draggable="true" data-href="http://www.naslovi.net/" data-name="Naslovi">Naslovi</a>
                     <a href="https://www.netkolumne.com/" draggable="true" data-href="https://www.netkolumne.com/" data-name="Netkolumne">Netkolumne</a>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Društvene mreže</h2>
-                <div class="links">
+          </div>
+        </section>
+        <section class="category" id="category-drustvene-mreze" data-category-name="Društvene mreže">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Društvene mreže <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
                     <a href="http://www.facebook.com/" draggable="true" data-href="http://www.facebook.com/" data-name="Facebook">Facebook</a>
                     <a href="http://twitter.com/" draggable="true" data-href="http://twitter.com/" data-name="Twitter">Twitter</a>
                     <a href="https://www.linkedin.com/" draggable="true" data-href="https://www.linkedin.com/" data-name="LinkedIn">LinkedIn</a>
@@ -213,96 +250,189 @@
                     <a href="https://www.tumblr.com/" draggable="true" data-href="https://www.tumblr.com/" data-name="Tumblr">Tumblr</a>
                     <a href="http://www.reddit.com/" draggable="true" data-href="http://www.reddit.com/" data-name="Reddit">Reddit</a>
                     <a href="http://www.last.fm/" draggable="true" data-href="http://www.last.fm/" data-name="Last.fm">Last.fm</a>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Kula / Vrbas</h2>
-                <div class="links">                    <a href="http://www.kula.rs/" draggable="true" data-href="http://www.kula.rs/" data-name="Kula.rs">Kula.rs</a>
-                    <a href="https://vrbas.net/" draggable="true" data-href="https://vrbas.net/" data-name="Vrbas.net">Vrbas.net</a>                    <a href="https://lugo.rs/" draggable="true" data-href="https://lugo.rs/" data-name="LuGo.rs">LuGo.rs</a>
-                </div>
-            </section>
-
-            <section class="category">
-                <h2>Razno</h2>
-                <div class="links">
+          </div>
+        </section>
+        <section class="category" id="category-kula-/-vrbas" data-category-name="Kula / Vrbas">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Kula / Vrbas <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
+                    <a href="http://www.kula.rs/" draggable="true" data-href="http://www.kula.rs/" data-name="Kula.rs">Kula.rs</a>
+                    <a href="https://vrbas.net/" draggable="true" data-href="https://vrbas.net/" data-name="Vrbas.net">Vrbas.net</a>
+                    <a href="https://lugo.rs/" draggable="true" data-href="https://lugo.rs/" data-name="LuGo.rs">LuGo.rs</a>
+          </div>
+        </section>
+        <section class="category" id="category-razno" data-category-name="Razno">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2>Razno <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
                     <a href="http://www.kupujemprodajem.com/" draggable="true" data-href="http://www.kupujemprodajem.com/" data-name="KupujemProdajem">KupujemProdajem</a>
                     <a href="http://www.halooglasi.com/" draggable="true" data-href="http://www.halooglasi.com/" data-name="HaloOglasi">HaloOglasi</a>
                     <a href="https://www.svastara.rs/" draggable="true" data-href="https://www.svastara.rs/" data-name="Svaštara">Svaštara</a>
                     <a href="http://www.kupindo.com/" draggable="true" data-href="http://www.kupindo.com/" data-name="Kupindo">Kupindo</a>
-                    <a href="http://www.limundo.com/" draggable="true" data-href="http://www.limundo.com/" data-name="Limundo">Limundo</a>                    <a href="http://www.mobilnisvet.com/" draggable="true" data-href="http://www.mobilnisvet.com/" data-name="MobilniSvet">MobilniSvet</a>
+                    <a href="http://www.limundo.com/" draggable="true" data-href="http://www.limundo.com/" data-name="Limundo">Limundo</a>
+                    <a href="http://www.mobilnisvet.com/" draggable="true" data-href="http://www.mobilnisvet.com/" data-name="MobilniSvet">MobilniSvet</a>
                     <a href="http://www.benchmark.rs/" draggable="true" data-href="http://www.benchmark.rs/" data-name="Benchmark">Benchmark</a>
                     <a href="https://satplus.rs/" draggable="true" data-href="https://satplus.rs/" data-name="SAT">SAT</a>
                     <a href="http://www.polovniautomobili.com/" draggable="true" data-href="http://www.polovniautomobili.com/" data-name="Polovni Automobili">Polovni Automobili</a>
                     <a href="http://forum.burek.com/" draggable="true" data-href="http://forum.burek.com/" data-name="Burek">Burek</a>
                     <a href="http://www.elitesecurity.org/" draggable="true" data-href="http://www.elitesecurity.org/" data-name="EliteSecurity">EliteSecurity</a>
                     <a href="http://www.yuportal.com/" draggable="true" data-href="http://www.yuportal.com/" data-name="YuPortal">YuPortal</a>
-                </div>
-            </section>
-
-        </div>
-    </div>
+          </div>
+        </section>
+    </main>
     <script>
     (function () {
       'use strict';
+      if (typeof Sortable === 'undefined') {
+        console.error('Sortable.js failed to load');
+        return;
+      }
+
       var FAV_KEY = 'kw-favorites';
+      var CUSTOM_KEY = 'kw-custom-links';
+      var ORDER_KEY = 'kw-category-order';
+      var HIDDEN_KEY = 'kw-hidden-categories';
+
       var query = '';
-      var draggedHref = null;
+      var container = document.getElementById('categoriesContainer');
+
+      // ========== UTILITIES ==========
+      function load(key, fallback) {
+        try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; }
+      }
+      function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+
+      function getCategoryId(section) {
+        return section.id || section.getAttribute('data-category-name');
+      }
+
+      // ========== SEARCH ==========
       var searchInput = document.getElementById('searchInput');
       var searchCount = document.getElementById('searchCount');
-      var allLinks = Array.prototype.slice.call(document.querySelectorAll('.links a[href]'));
-      var allCategories = Array.prototype.slice.call(document.querySelectorAll('.category'));
 
       function applyFilter() {
         var q = (query || '').trim().toLowerCase();
-        var visibleCount = 0;
-        var totalCount = 0;
-        allLinks.forEach(function (a) {
-          if (a.closest('#favorites-zone')) return;
+        var visibleCount = 0, totalCount = 0;
+        document.querySelectorAll('.links a[href]').forEach(function (a) {
+          if (a.closest('[data-special="favorites"]') || a.closest('[data-special="custom"]')) return;
           totalCount++;
           if (!q) { a.classList.remove('hidden'); visibleCount++; return; }
           var name = (a.getAttribute('data-name') || a.textContent || '').toLowerCase();
           var href = (a.getAttribute('data-href') || a.href || '').toLowerCase();
-          var match = name.indexOf(q) !== -1 || href.indexOf(q) !== -1;
-          if (match) { a.classList.remove('hidden'); visibleCount++; } else { a.classList.add('hidden'); }
+          if (name.indexOf(q) !== -1 || href.indexOf(q) !== -1) { a.classList.remove('hidden'); visibleCount++; }
+          else a.classList.add('hidden');
         });
-        allCategories.forEach(function (cat) {
-          if (cat.id === 'category-moji-linkovi') return;
-          var linksContainer = cat.querySelector('.links');
-          if (!linksContainer) return;
-          var visible = linksContainer.querySelectorAll('a:not(.hidden)').length;
-          if (visible === 0 && q) { cat.classList.add('hidden-category'); } else { cat.classList.remove('hidden-category'); }
+        document.querySelectorAll('.category').forEach(function (cat) {
+          if (cat.classList.contains('forced-visible')) return;
+          var lc = cat.querySelector('.links');
+          if (!lc) return;
+          var vis = lc.querySelectorAll('a:not(.hidden)').length;
+          if (vis === 0 && q) cat.classList.add('hidden-category'); else cat.classList.remove('hidden-category');
         });
-        if (q) { searchCount.textContent = visibleCount + ' / ' + totalCount; } else { searchCount.textContent = ''; }
+        if (q) searchCount.textContent = visibleCount + ' / ' + totalCount;
+        else searchCount.textContent = '';
       }
-
       if (searchInput) {
         searchInput.addEventListener('input', function () { query = this.value; applyFilter(); });
       }
 
-      var favZone = document.getElementById('favorites-zone');
+      // ========== CATEGORY ORDER (Sortable on container) ==========
+      function saveOrder() {
+        var order = [];
+        document.querySelectorAll('.category').forEach(function (s) { order.push(getCategoryId(s)); });
+        save(ORDER_KEY, order);
+      }
+      function applySavedOrder() {
+        var saved_order = load(ORDER_KEY, null);
+        if (!saved_order || !Array.isArray(saved_order)) return;
+        saved_order.forEach(function (id) {
+          var el = document.getElementById(id) || document.querySelector('[data-category-name="' + id + '"]');
+          if (el) container.appendChild(el);
+        });
+      }
+      Sortable.create(container, {
+        animation: 180,
+        handle: '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        forceFallback: false,
+        delay: 150,
+        delayOnTouchOnly: true,
+        onEnd: function () { saveOrder(); }
+      });
+
+      // ========== VISIBILITY TOGGLE ==========
+      function saveHidden() {
+        var hidden = [];
+        document.querySelectorAll('.category.is-hidden').forEach(function (s) { hidden.push(getCategoryId(s)); });
+        save(HIDDEN_KEY, hidden);
+      }
+      function applySavedHidden() {
+        var hidden = load(HIDDEN_KEY, []);
+        hidden.forEach(function (id) {
+          var el = document.getElementById(id) || document.querySelector('[data-category-name="' + id + '"]');
+          if (el) el.classList.add('is-hidden');
+        });
+        updateToggleIcons();
+      }
+      function updateToggleIcons() {
+        document.querySelectorAll('.category').forEach(function (cat) {
+          var btn = cat.querySelector('[data-visibility-toggle]');
+          if (!btn) return;
+          if (cat.classList.contains('is-hidden')) {
+            btn.textContent = '🚫';
+            btn.setAttribute('aria-label', 'Prikaži kategoriju');
+            btn.setAttribute('title', 'Prikaži kategoriju');
+          } else {
+            btn.textContent = '👁';
+            btn.setAttribute('aria-label', 'Sakrij kategoriju');
+            btn.setAttribute('title', 'Sakrij kategoriju');
+          }
+        });
+      }
+      document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-visibility-toggle]');
+        if (!btn) return;
+        e.preventDefault();
+        var cat = btn.closest('.category');
+        cat.classList.toggle('is-hidden');
+        saveHidden();
+        updateToggleIcons();
+      });
+      var showAllBtn = document.getElementById('showAllBtn');
+      if (showAllBtn) {
+        showAllBtn.addEventListener('click', function () {
+          document.querySelectorAll('.category.is-hidden').forEach(function (c) { c.classList.remove('is-hidden'); });
+          saveHidden();
+          updateToggleIcons();
+        });
+      }
+
+      // ========== FAVORITES (Moji linkovi) ==========
+      var favZone = document.querySelector('[data-special="favorites"]');
       var favSection = document.getElementById('category-moji-linkovi');
+      var favEmpty = favSection ? favSection.querySelector('[data-empty]') : null;
       var resetBtn = document.getElementById('resetFavorites');
 
-      function loadFavorites() {
-        try { var raw = localStorage.getItem(FAV_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
-      }
-      function saveFavorites(favs) {
-        try { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); } catch (e) {}
-      }
-      function renderFavorites() {
-        var favs = loadFavorites();
-        while (favZone.firstChild) favZone.removeChild(favZone.firstChild);
+      function loadFavs() { return load(FAV_KEY, []); }
+      function saveFavs(f) { save(FAV_KEY, f); }
+      function renderFavs() {
+        var favs = loadFavs();
+        if (!favZone) return;
+        // remove existing link a's (keep form/empty)
+        Array.prototype.slice.call(favZone.querySelectorAll('a.fav-item')).forEach(function (a) { a.remove(); });
         if (favs.length === 0) {
-          var empty = document.createElement('p');
-          empty.className = 'empty-message';
-          empty.id = 'favorites-empty';
-          empty.textContent = 'Ovde prevucite omiljene linkove';
-          favZone.appendChild(empty);
-          favSection.setAttribute('data-empty', 'true');
+          if (favEmpty) favEmpty.style.display = '';
         } else {
-          favs.forEach(function (f) { favZone.appendChild(createFavNode(f.href, f.name)); });
-          favSection.setAttribute('data-empty', 'false');
+          if (favEmpty) favEmpty.style.display = 'none';
+          favs.forEach(function (f) { favZone.insertBefore(createFavNode(f.href, f.name), favEmpty); });
         }
       }
       function createFavNode(href, name) {
@@ -311,51 +441,40 @@
         a.setAttribute('draggable', 'true');
         a.setAttribute('data-href', href);
         a.setAttribute('data-name', name);
-        a.className = 'favorite-link';
-        a.setAttribute('data-favorite', 'true');
-        a.addEventListener('dblclick', function (e) { e.preventDefault(); removeFavorite(href); });
+        a.className = 'fav-item';
+        a.addEventListener('dblclick', function (e) { e.preventDefault(); removeFav(href); });
         a.title = name + '  —  (dupli klik za uklanjanje)';
         return a;
       }
-      function addFavorite(href, name) {
-        var favs = loadFavorites();
+      function addFav(href, name) {
+        var favs = loadFavs();
         for (var i = 0; i < favs.length; i++) if (favs[i].href === href) return;
         favs.push({ href: href, name: name });
-        saveFavorites(favs); renderFavorites();
+        saveFavs(favs); renderFavs();
       }
-      function removeFavorite(href) {
-        var favs = loadFavorites();
-        saveFavorites(favs.filter(function (f) { return f.href !== href; }));
-        renderFavorites();
+      function removeFav(href) {
+        saveFavs(loadFavs().filter(function (f) { return f.href !== href; }));
+        renderFavs();
       }
-
-      document.addEventListener('dragstart', function (e) {
-        var t = e.target;
-        if (t && t.tagName === 'A' && t.hasAttribute('data-href')) {
-          draggedHref = t.getAttribute('data-href');
-          var name = t.getAttribute('data-name') || t.textContent || '';
-          try {
-            e.dataTransfer.setData('text/plain', draggedHref);
-            e.dataTransfer.setData('application/x-kw-link', JSON.stringify({ href: draggedHref, name: name }));
-            e.dataTransfer.effectAllowed = 'copyMove';
-          } catch (err) {}
-          t.classList.add('dragging');
-        }
-      });
-      document.addEventListener('dragend', function (e) {
-        var t = e.target;
-        if (t && t.classList) t.classList.remove('dragging');
-        document.querySelectorAll('.drop-target').forEach(function (n) { n.classList.remove('drop-target'); });
-        draggedHref = null;
-      });
+      // Sortable for favorites
       if (favZone) {
-        favZone.addEventListener('dragover', function (e) {
-          e.preventDefault(); e.dataTransfer.dropEffect = 'copy';
-          favZone.classList.add('drop-target');
+        Sortable.create(favZone, {
+          animation: 180,
+          ghostClass: 'sortable-ghost',
+          filter: '.empty-message, .custom-link-form',
+          preventOnFilter: false,
+          onEnd: function () {
+            var order = [];
+            Array.prototype.slice.call(favZone.querySelectorAll('a.fav-item')).forEach(function (a) {
+              order.push({ href: a.getAttribute('data-href'), name: a.getAttribute('data-name') });
+            });
+            saveFavs(order);
+            renderFavs();
+          }
         });
-        favZone.addEventListener('dragleave', function (e) {
-          if (!favZone.contains(e.relatedTarget)) favZone.classList.remove('drop-target');
-        });
+        // Drop target
+        favZone.addEventListener('dragover', function (e) { e.preventDefault(); favZone.classList.add('drop-target'); });
+        favZone.addEventListener('dragleave', function (e) { if (!favZone.contains(e.relatedTarget)) favZone.classList.remove('drop-target'); });
         favZone.addEventListener('drop', function (e) {
           e.preventDefault();
           favZone.classList.remove('drop-target');
@@ -365,23 +484,123 @@
             if (raw) { var obj = JSON.parse(raw); href = obj.href; name = obj.name; }
           } catch (err) {}
           if (!href) href = e.dataTransfer.getData('text/plain');
-          if (!href) href = draggedHref;
-          if (!name) {
-            var src = document.querySelector('a[data-href="' + href + '"]');
+          if (href && !name) {
+            var src = document.querySelector('a[data-href="' + href.replace(/"/g, '\\"') + '"]');
             if (src) name = src.getAttribute('data-name') || src.textContent;
           }
-          if (href && name) addFavorite(href, name);
+          if (href && name) addFav(href, name);
         });
       }
       if (resetBtn) {
         resetBtn.addEventListener('click', function () {
-          if (loadFavorites().length === 0) return;
+          if (loadFavs().length === 0) return;
           if (confirm('Obriši sve iz "Moji linkovi"?\n\nBiće trajno uklonjeno sa ovog uređaja.')) {
-            saveFavorites([]); renderFavorites();
+            saveFavs([]); renderFavs();
           }
         });
       }
-      renderFavorites();
+
+      // Dragstart za bilo koji link (prosledjivanje imena)
+      document.addEventListener('dragstart', function (e) {
+        var t = e.target;
+        if (t && t.tagName === 'A' && t.hasAttribute('data-href')) {
+          var href = t.getAttribute('data-href');
+          var name = t.getAttribute('data-name') || t.textContent || '';
+          try {
+            e.dataTransfer.setData('text/plain', href);
+            e.dataTransfer.setData('application/x-kw-link', JSON.stringify({ href: href, name: name }));
+            e.dataTransfer.effectAllowed = 'copyMove';
+          } catch (err) {}
+          t.classList.add('dragging');
+        }
+      });
+      document.addEventListener('dragend', function (e) {
+        var t = e.target;
+        if (t && t.classList) t.classList.remove('dragging');
+        document.querySelectorAll('.drop-target').forEach(function (n) { n.classList.remove('drop-target'); });
+      });
+
+      // ========== CUSTOM LINKS ==========
+      var customSection = document.getElementById('category-custom-linkovi');
+      var customZone = customSection ? customSection.querySelector('[data-special="custom"]') : null;
+      var customEmpty = customSection ? customSection.querySelector('[data-empty]') : null;
+      var customForm = customSection ? customSection.querySelector('[data-custom-form]') : null;
+
+      function loadCustom() { return load(CUSTOM_KEY, []); }
+      function saveCustom(c) { save(CUSTOM_KEY, c); }
+      function renderCustom() {
+        var items = loadCustom();
+        if (!customZone) return;
+        Array.prototype.slice.call(customZone.querySelectorAll('a.fav-item')).forEach(function (a) { a.remove(); });
+        if (items.length === 0) {
+          if (customEmpty) customEmpty.style.display = '';
+          if (customSection) customSection.classList.add('forced-visible-empty');
+        } else {
+          if (customEmpty) customEmpty.style.display = 'none';
+          items.forEach(function (f) { customZone.insertBefore(createFavNode(f.href, f.name), customForm); });
+          if (customSection) customSection.classList.remove('forced-visible-empty');
+        }
+      }
+      function addCustom(href, name) {
+        var items = loadCustom();
+        for (var i = 0; i < items.length; i++) if (items[i].href === href) return;
+        items.push({ href: href, name: name });
+        saveCustom(items); renderCustom();
+      }
+      function removeCustom(href) {
+        saveCustom(loadCustom().filter(function (f) { return f.href !== href; }));
+        renderCustom();
+      }
+      if (customForm) {
+        customForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var nameInput = customForm.querySelector('input[name="name"]');
+          var urlInput = customForm.querySelector('input[name="url"]');
+          var name = (nameInput.value || '').trim();
+          var url = (urlInput.value || '').trim();
+          if (!name || !url) return;
+          if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+          addCustom(url, name);
+          nameInput.value = '';
+          urlInput.value = '';
+          nameInput.focus();
+        });
+      }
+      if (customZone) {
+        Sortable.create(customZone, {
+          animation: 180,
+          ghostClass: 'sortable-ghost',
+          filter: '.empty-message, .custom-link-form',
+          onEnd: function () {
+            var order = [];
+            Array.prototype.slice.call(customZone.querySelectorAll('a.fav-item')).forEach(function (a) {
+              order.push({ href: a.getAttribute('data-href'), name: a.getAttribute('data-name') });
+            });
+            saveCustom(order);
+            renderCustom();
+          }
+        });
+        // Update delete on dblclick for custom items
+        customZone.addEventListener('dblclick', function (e) {
+          var t = e.target.closest('a.fav-item');
+          if (t) { e.preventDefault(); removeCustom(t.getAttribute('data-href')); }
+        });
+      }
+
+      // ========== INITIALIZE ==========
+      applySavedOrder();
+      applySavedHidden();
+      renderFavs();
+      renderCustom();
+      // Update counts
+      document.querySelectorAll('.category').forEach(function (cat) {
+        var lc = cat.querySelector('.links');
+        if (!lc) return;
+        var countEl = cat.querySelector('[data-count]');
+        if (!countEl) return;
+        var n = lc.querySelectorAll('a[href]').length;
+        if (n > 0) countEl.textContent = '(' + n + ')';
+      });
     })();
     </script>
 </body>
