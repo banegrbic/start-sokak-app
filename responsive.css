@@ -565,16 +565,17 @@ body {
   .links a { font-size: 13px; padding: 6px 10px; }
 }
 
-/* Desktop & laptop: 2 kolone za kategorije — Pinterest / masonry stil */
-/* Koristimo CSS Grid sa grid-auto-flow:dense za masonry-efekat
-   (popunjava praznine u redu, slicno Pinterest rasporedu). */
+/* Desktop & laptop: 2 kolone za kategorije — workaround za masonry */
+/* Koristimo CSS Grid gde se kartice u istom redu izjednačavaju po visini
+   (align-items: stretch, default). Manja kartica dobija prazan prostor
+   dole da bude iste visine kao veća. Ovo je workaround dok ne resimo
+   pravi Pinterest masonry — vizuelno je urednije od dense rasporeda. */
 @media (min-width: 900px) {
   #categoriesContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-auto-flow: dense; /* popunjava praznine — Pinterest raspored */
+    /* align-items: stretch (default) — kartice iste visine u redu */
     gap: 20px 40px; /* row 20px, column 40px */
-    align-items: start; /* nejednake visine - svaka kartica pocinje na vrhu */
   }
   #categoriesContainer > .category {
     box-sizing: border-box;
