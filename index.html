@@ -66,8 +66,9 @@
         <section class="category" id="category-moji-linkovi" data-category-name="Moji linkovi">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>★ Moji linkovi <span class="hint">Dupli klik na link = ukloni · Prevuci za redosled</span></h2>
+            <h2>★ Moji linkovi <span class="hint">Prevuci link na 🗑 za brisanje</span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+            <button type="button" class="trash-zone" data-trash-zone="favorites" aria-label="Obriši link (prevuci ovde)" title="Prevuci link ovde za brisanje">🗑</button>
           </header>
           <div class="links" data-special="favorites" data-drop-zone="true">
             <p class="empty-message" data-empty>Ovde prevucite omiljene linkove</p>
@@ -286,6 +287,15 @@
           </div>
         </section>
     </main>
+    <!-- Action sheet (mobilni long-press) -->
+    <div id="actionSheet" class="action-sheet-overlay" hidden>
+      <div class="action-sheet" role="dialog" aria-modal="true" aria-labelledby="actionSheetTitle">
+        <div class="action-sheet-title" id="actionSheetTitle">Link</div>
+        <button type="button" class="action-sheet-btn primary" data-action="fav">★ Dodaj u Moje linkove</button>
+        <button type="button" class="action-sheet-btn danger" data-action="trash">🗑 Obriši</button>
+        <button type="button" class="action-sheet-btn action-sheet-cancel" data-action="cancel">Otkaži</button>
+      </div>
+    </div>
     <script>
     (function () {
       'use strict';
@@ -550,7 +560,158 @@
         var t = e.target;
         if (t && t.classList) t.classList.remove('dragging');
         document.querySelectorAll('.drop-target').forEach(function (n) { n.classList.remove('drop-target'); });
+        document.querySelectorAll('.trash-zone.is-drop-target').forEach(function (n) { n.classList.remove('is-drop-target'); });
       });
+
+      // ========== TRASH DROP ZONE (desktop/laptop) ==========
+      // Drag link na 🗑 dugme u headeru "Moji linkovi" ili "Custom linkovi" → briše
+      // Koristimo event delegation jer se Custom sekcija kreira dinamički
+      document.addEventListener('dragover', function (e) {
+        var btn = e.target.closest && e.target.closest('[data-trash-zone]');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        try { e.dataTransfer.dropEffect = 'move'; } catch (err) {}
+        btn.classList.add('is-drop-target');
+      });
+      document.addEventListener('dragleave', function (e) {
+        var btn = e.target.closest && e.target.closest('[data-trash-zone]');
+        if (!btn) return;
+        if (!btn.contains(e.relatedTarget)) btn.classList.remove('is-drop-target');
+      });
+      document.addEventListener('drop', function (e) {
+        var btn = e.target.closest && e.target.closest('[data-trash-zone]');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        btn.classList.remove('is-drop-target');
+        var href = null, name = null;
+        try {
+          var raw = e.dataTransfer.getData('application/x-kw-link');
+          if (raw) { var obj = JSON.parse(raw); href = obj.href; name = obj.name; }
+        } catch (err) {}
+        if (!href) href = e.dataTransfer.getData('text/plain');
+        if (!href || !name) return;
+        var zoneType = btn.getAttribute('data-trash-zone');
+        if (zoneType === 'favorites') removeFav(href);
+        else if (zoneType === 'custom') removeCustom(href);
+      });
+
+      // ========== LONG-PRESS + ACTION SHEET (mobilni) ==========
+      // Na mobilnom dugi pritisak aktivira context menu → onemogucavamo ga
+      // i prikazujemo action sheet sa opcijama: Dodaj u Moje / Obriši.
+      // Desktop ostaje nepromenjen (drag-drop na trash dugme).
+      var LONG_PRESS_MS = 500;
+      var longPressTimer = null;
+      var longPressTarget = null;
+      var longPressTriggered = false;
+      var actionSheet = document.getElementById('actionSheet');
+      var actionSheetTitle = document.getElementById('actionSheetTitle');
+
+      function isMobile() {
+        return window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+      }
+
+      function openActionSheet(link) {
+        if (!actionSheet) return;
+        longPressTarget = link;
+        if (actionSheetTitle) actionSheetTitle.textContent = link.getAttribute('data-name') || link.textContent || 'Link';
+        actionSheet.hidden = false;
+      }
+
+      function closeActionSheet() {
+        if (!actionSheet) return;
+        actionSheet.hidden = true;
+        longPressTarget = null;
+      }
+
+      // Long-press start
+      function startLongPress(link, e) {
+        // Ne reaguj na dugmad/linkove izvan kategorija (npr. modal)
+        if (!link || !link.closest || !link.closest('.category')) return;
+        // Ne reaguj ako je vec u favorites ili custom (trash opcija nema smisla, samo "otvori URL")
+        var inFav = link.closest('[data-special="favorites"]');
+        var inCustom = link.closest('[data-special="custom"]');
+        longPressTriggered = false;
+        clearTimeout(longPressTimer);
+        longPressTimer = setTimeout(function () {
+          longPressTriggered = true;
+          // Vibracija ako je podržano
+          try { if (navigator.vibrate) navigator.vibrate(30); } catch (err) {}
+          openActionSheet(link);
+        }, LONG_PRESS_MS);
+      }
+
+      function cancelLongPress() {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+
+      // Touch handlers
+      document.addEventListener('touchstart', function (e) {
+        if (!isMobile()) return;
+        var t = e.target;
+        var link = t.closest && t.closest('a[href]');
+        if (!link) return;
+        startLongPress(link, e);
+      }, { passive: true });
+
+      document.addEventListener('touchend', function (e) {
+        cancelLongPress();
+        // Ako je long-press triggerovan, spreči default click (inače otvori URL)
+        if (longPressTriggered) {
+          e.preventDefault();
+          longPressTriggered = false;
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchmove', function () {
+        cancelLongPress(); // ako korisnik pomeri prst, otkazi
+      }, { passive: true });
+
+      // Onemoguci context menu na linkovima na mobilnom
+      document.addEventListener('contextmenu', function (e) {
+        if (!isMobile()) return;
+        var link = e.target.closest && e.target.closest('a[href]');
+        if (link) e.preventDefault();
+      });
+
+      // Action sheet dugmad
+      if (actionSheet) {
+        actionSheet.addEventListener('click', function (e) {
+          // Klik na overlay (van sheet-a) = otkazi
+          if (e.target === actionSheet) { closeActionSheet(); return; }
+          var btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          var action = btn.getAttribute('data-action');
+          if (action === 'cancel' || !longPressTarget) { closeActionSheet(); return; }
+          var href = longPressTarget.getAttribute('data-href');
+          var name = longPressTarget.getAttribute('data-name') || longPressTarget.textContent || '';
+          if (!href) { closeActionSheet(); return; }
+          if (action === 'fav') {
+            // Dodaj u Moje linkovi (ako vec nije)
+            addFav(href, name);
+            // Vizuelni feedback
+            try { if (navigator.vibrate) navigator.vibrate([20, 40, 20]); } catch (err) {}
+          } else if (action === 'trash') {
+            // Brisanje na osnovu toga gde se link nalazi
+            var inFav = longPressTarget.closest('[data-special="favorites"]');
+            var inCustom = longPressTarget.closest('[data-special="custom"]');
+            if (inFav) removeFav(href);
+            else if (inCustom) removeCustom(href);
+            // Za linkove u obicnim kategorijama: "Obriši" nema smisla
+            // (to su hardkodovani linkovi), pa prikazujemo upozorenje
+            else { alert('Brisanje nije dostupno za ugrađene linkove.\nKoristite dugme "★ Dodaj u Moje linkove".'); }
+            try { if (navigator.vibrate) navigator.vibrate(50); } catch (err) {}
+          }
+          closeActionSheet();
+        });
+
+        // Escape zatvara
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !actionSheet.hidden) closeActionSheet();
+        });
+      }
 
       // ========== CUSTOM LINKS (dynamic, hidden when empty) ==========
       var customSection = null; // created dynamically
@@ -571,6 +732,7 @@
             '<button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>' +
             '<h2>＋ Custom linkovi <span class="count" data-count></span></h2>' +
             '<button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>' +
+            '<button type="button" class="trash-zone" data-trash-zone="custom" aria-label="Obriši link (prevuci ovde)" title="Prevuci link ovde za brisanje">🗑</button>' +
           '</header>' +
           '<div class="links" data-special="custom" data-drop-zone="true"></div>';
         container.insertBefore(customSection, document.getElementById('category-moji-linkovi').nextSibling);

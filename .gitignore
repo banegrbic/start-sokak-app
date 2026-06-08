@@ -1,0 +1,3 @@
+# Backup fajlovi (privremeni, pre izmena)
+*.bak.*
+*.backup.*
