@@ -1,3 +1,8 @@
 # Backup fajlovi (privremeni, pre izmena)
 *.bak.*
 *.backup.*
+
+# SSH secrets (deploy kljucevi) — nikad ne gurati na GitHub
+secrets/
+*.pem
+*.key

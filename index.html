@@ -503,7 +503,7 @@
           ghostClass: 'sortable-ghost',
           filter: '.empty-message, .custom-link-form',
           preventOnFilter: false,
-          delay: 150,
+          delay: 50, // smanjeno sa 150 da ne konkuriše sa long-press
           delayOnTouchOnly: true,
           onEnd: function () {
             var order = [];
@@ -601,10 +601,16 @@
       // Na mobilnom dugi pritisak aktivira context menu → onemogucavamo ga
       // i prikazujemo action sheet sa opcijama: Dodaj u Moje / Obriši.
       // Desktop ostaje nepromenjen (drag-drop na trash dugme).
+      //
+      // BITNO: Sortable.js (sa forceFallback: true) presreće mousedown za drag.
+      // Rešenje: registrujemo touchstart sa capture: true + preventDefault()
+      // da zaustavimo Sortable pre nego što počne.
       var LONG_PRESS_MS = 500;
       var longPressTimer = null;
       var longPressTarget = null;
       var longPressTriggered = false;
+      var longPressStartX = 0;
+      var longPressStartY = 0;
       var actionSheet = document.getElementById('actionSheet');
       var actionSheetTitle = document.getElementById('actionSheetTitle');
 
@@ -625,18 +631,14 @@
         longPressTarget = null;
       }
 
-      // Long-press start
-      function startLongPress(link, e) {
-        // Ne reaguj na dugmad/linkove izvan kategorija (npr. modal)
+      function startLongPress(link, x, y) {
         if (!link || !link.closest || !link.closest('.category')) return;
-        // Ne reaguj ako je vec u favorites ili custom (trash opcija nema smisla, samo "otvori URL")
-        var inFav = link.closest('[data-special="favorites"]');
-        var inCustom = link.closest('[data-special="custom"]');
         longPressTriggered = false;
+        longPressStartX = x;
+        longPressStartY = y;
         clearTimeout(longPressTimer);
         longPressTimer = setTimeout(function () {
           longPressTriggered = true;
-          // Vibracija ako je podržano
           try { if (navigator.vibrate) navigator.vibrate(30); } catch (err) {}
           openActionSheet(link);
         }, LONG_PRESS_MS);
@@ -647,27 +649,44 @@
         longPressTimer = null;
       }
 
-      // Touch handlers
+      // Touch handler sa capture: true da pregazimo Sortable
       document.addEventListener('touchstart', function (e) {
         if (!isMobile()) return;
         var t = e.target;
         var link = t.closest && t.closest('a[href]');
         if (!link) return;
-        startLongPress(link, e);
-      }, { passive: true });
+        var touch = e.touches && e.touches[0];
+        var x = touch ? touch.clientX : 0;
+        var y = touch ? touch.clientY : 0;
+        // Pokreni long-press tajmer, NE sprečavaj default još uvek
+        // (želimo da Sortable dobije šansu za drag, ali ako korisnik drži 500ms, naš handler pobedi)
+        startLongPress(link, x, y);
+      }, { passive: true, capture: true });
+
+      // touchmove — otkaži ako se prst pomeri više od 10px (da ne smetamo drag)
+      document.addEventListener('touchmove', function (e) {
+        if (!longPressTimer) return;
+        var touch = e.touches && e.touches[0];
+        if (!touch) return;
+        var dx = Math.abs(touch.clientX - longPressStartX);
+        var dy = Math.abs(touch.clientY - longPressStartY);
+        if (dx > 10 || dy > 10) cancelLongPress();
+      }, { passive: true, capture: true });
 
       document.addEventListener('touchend', function (e) {
         cancelLongPress();
-        // Ako je long-press triggerovan, spreči default click (inače otvori URL)
         if (longPressTriggered) {
+          // Spreči default da link ne bi otvorio URL
           e.preventDefault();
+          e.stopPropagation();
+          if (e.stopImmediatePropagation) e.stopImmediatePropagation();
           longPressTriggered = false;
         }
-      }, { passive: false });
+      }, { passive: false, capture: true });
 
-      document.addEventListener('touchmove', function () {
-        cancelLongPress(); // ako korisnik pomeri prst, otkazi
-      }, { passive: true });
+      document.addEventListener('touchcancel', function () {
+        cancelLongPress();
+      }, { passive: true, capture: true });
 
       // Onemoguci context menu na linkovima na mobilnom
       document.addEventListener('contextmenu', function (e) {
@@ -679,7 +698,6 @@
       // Action sheet dugmad
       if (actionSheet) {
         actionSheet.addEventListener('click', function (e) {
-          // Klik na overlay (van sheet-a) = otkazi
           if (e.target === actionSheet) { closeActionSheet(); return; }
           var btn = e.target.closest('[data-action]');
           if (!btn) return;
@@ -689,25 +707,19 @@
           var name = longPressTarget.getAttribute('data-name') || longPressTarget.textContent || '';
           if (!href) { closeActionSheet(); return; }
           if (action === 'fav') {
-            // Dodaj u Moje linkovi (ako vec nije)
             addFav(href, name);
-            // Vizuelni feedback
             try { if (navigator.vibrate) navigator.vibrate([20, 40, 20]); } catch (err) {}
           } else if (action === 'trash') {
-            // Brisanje na osnovu toga gde se link nalazi
             var inFav = longPressTarget.closest('[data-special="favorites"]');
             var inCustom = longPressTarget.closest('[data-special="custom"]');
             if (inFav) removeFav(href);
             else if (inCustom) removeCustom(href);
-            // Za linkove u obicnim kategorijama: "Obriši" nema smisla
-            // (to su hardkodovani linkovi), pa prikazujemo upozorenje
             else { alert('Brisanje nije dostupno za ugrađene linkove.\nKoristite dugme "★ Dodaj u Moje linkove".'); }
             try { if (navigator.vibrate) navigator.vibrate(50); } catch (err) {}
           }
           closeActionSheet();
         });
 
-        // Escape zatvara
         document.addEventListener('keydown', function (e) {
           if (e.key === 'Escape' && !actionSheet.hidden) closeActionSheet();
         });
@@ -742,7 +754,7 @@
         customSortable = Sortable.create(customZone, {
           animation: 180,
           ghostClass: 'sortable-ghost',
-          delay: 150,
+          delay: 50, // smanjeno sa 150 da ne konkuriše sa long-press
           delayOnTouchOnly: true,
           onEnd: function () {
             var order = [];
