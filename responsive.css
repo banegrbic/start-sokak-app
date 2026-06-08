@@ -565,13 +565,21 @@ body {
   .links a { font-size: 13px; padding: 6px 10px; }
 }
 
-/* Desktop & laptop: 2 kolone za kategorije */
+/* Desktop & laptop: 2 kolone za kategorije — Pinterest / masonry stil */
 @media (min-width: 900px) {
   #categoriesContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    align-items: start; /* kartice imaju svoju visinu, ne prate suseda */
+    display: block;        /* pregazimo .main-container flex, columns zahteva block */
+    column-count: 2;
+    column-gap: 20px;
+  }
+  /* Svaka kategorija mora biti display:inline-block da bi column layout radio */
+  #categoriesContainer > .category {
+    display: inline-block;
+    width: 100%;
+    break-inside: avoid;       /* ne lomi karticu izmedju kolona */
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 20px;       /* vertikalni razmak izmedju kartica u koloni */
   }
 }
 
