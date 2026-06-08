@@ -568,18 +568,18 @@ body {
 /* Desktop & laptop: 2 kolone za kategorije — Pinterest / masonry stil */
 @media (min-width: 900px) {
   #categoriesContainer {
-    display: block;        /* pregazimo .main-container flex, columns zahteva block */
-    column-count: 2;
-    column-gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;          /* veci razmak izmedju kolona */
+    row-gap: 20px;             /* standardan razmak izmedju kartica */
+    align-items: start;        /* svaka kartica ima svoju visinu */
   }
-  /* Svaka kategorija mora biti display:inline-block da bi column layout radio */
+  /* Svaka kategorija zauzima 1 kolonu, sa svojom prirodnom visinom */
   #categoriesContainer > .category {
-    display: inline-block;
     width: 100%;
-    break-inside: avoid;       /* ne lomi karticu izmedju kolona */
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    margin-bottom: 20px;       /* vertikalni razmak izmedju kartica u koloni */
+    box-sizing: border-box;
+    /* Forsiraj da ne prelazi u drugu kolonu */
+    max-width: 100%;
   }
 }
 
