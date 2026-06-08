@@ -602,15 +602,22 @@
       // i prikazujemo action sheet sa opcijama: Dodaj u Moje / Obriši.
       // Desktop ostaje nepromenjen (drag-drop na trash dugme).
       //
-      // BITNO: Sortable.js (sa forceFallback: true) presreće mousedown za drag.
-      // Rešenje: registrujemo touchstart sa capture: true + preventDefault()
-      // da zaustavimo Sortable pre nego što počne.
+      // PROBLEM: Sortable.js (forceFallback: true) presreće mousedown/touchstart
+      // i presreće naš long-press handler. Rešenje: na mobilnom registrujemo
+      // touchstart na SVAKOM LINKU sa capture: true + preventDefault(),
+      // da Sortable NIKAD ne dobije šansu da započne drag.
+      //
+      // POSLEDICA: drag-drop iz kategorije u "Moje linkovi" ne radi na mobilnom.
+      // Zato dugme 🗑 u headeru "Moji linkovi" na mobilnom dobija TAP handler
+      // koji otvara action sheet — korisnik bira link dugim pritiskom na njega
+      // (u bilo kojoj kategoriji), pa u sheet-u bira "Dodaj u Moje linkove".
       var LONG_PRESS_MS = 500;
       var longPressTimer = null;
       var longPressTarget = null;
       var longPressTriggered = false;
       var longPressStartX = 0;
       var longPressStartY = 0;
+      var longPressTouchId = null;
       var actionSheet = document.getElementById('actionSheet');
       var actionSheetTitle = document.getElementById('actionSheetTitle');
 
@@ -631,11 +638,12 @@
         longPressTarget = null;
       }
 
-      function startLongPress(link, x, y) {
+      function startLongPress(link, x, y, touchId) {
         if (!link || !link.closest || !link.closest('.category')) return;
         longPressTriggered = false;
         longPressStartX = x;
         longPressStartY = y;
+        longPressTouchId = touchId;
         clearTimeout(longPressTimer);
         longPressTimer = setTimeout(function () {
           longPressTriggered = true;
@@ -647,46 +655,83 @@
       function cancelLongPress() {
         clearTimeout(longPressTimer);
         longPressTimer = null;
+        longPressTriggered = false;
+        longPressTouchId = null;
       }
 
-      // Touch handler sa capture: true da pregazimo Sortable
-      document.addEventListener('touchstart', function (e) {
-        if (!isMobile()) return;
-        var t = e.target;
-        var link = t.closest && t.closest('a[href]');
-        if (!link) return;
-        var touch = e.touches && e.touches[0];
-        var x = touch ? touch.clientX : 0;
-        var y = touch ? touch.clientY : 0;
-        // Pokreni long-press tajmer, NE sprečavaj default još uvek
-        // (želimo da Sortable dobije šansu za drag, ali ako korisnik drži 500ms, naš handler pobedi)
-        startLongPress(link, x, y);
-      }, { passive: true, capture: true });
+      // ============================================================
+      // MOBILNI: registrujemo touchstart/touchmove/touchend na SVAKOM LINKU
+      // sa capture: true, da pregazimo Sortable.js.
+      // ============================================================
+      function attachMobileLinkHandlers(link) {
+        if (link.__kw_mobile_longpress) return; // ne dupliraj
+        link.__kw_mobile_longpress = true;
 
-      // touchmove — otkaži ako se prst pomeri više od 10px (da ne smetamo drag)
-      document.addEventListener('touchmove', function (e) {
-        if (!longPressTimer) return;
-        var touch = e.touches && e.touches[0];
-        if (!touch) return;
-        var dx = Math.abs(touch.clientX - longPressStartX);
-        var dy = Math.abs(touch.clientY - longPressStartY);
-        if (dx > 10 || dy > 10) cancelLongPress();
-      }, { passive: true, capture: true });
-
-      document.addEventListener('touchend', function (e) {
-        cancelLongPress();
-        if (longPressTriggered) {
-          // Spreči default da link ne bi otvorio URL
+        link.addEventListener('touchstart', function (e) {
+          // Samo na mobilnom
+          if (!isMobile()) return;
+          // Samo za prvi prst (ne multi-touch)
+          if (e.touches.length !== 1) { cancelLongPress(); return; }
+          var touch = e.touches[0];
+          // KRITIČNO: spreči Sortable da uopšte vidi ovaj event
           e.preventDefault();
           e.stopPropagation();
           if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-          longPressTriggered = false;
-        }
-      }, { passive: false, capture: true });
+          startLongPress(link, touch.clientX, touch.clientY, touch.identifier);
+        }, { passive: false, capture: true });
 
-      document.addEventListener('touchcancel', function () {
-        cancelLongPress();
-      }, { passive: true, capture: true });
+        link.addEventListener('touchmove', function (e) {
+          if (!longPressTimer) return;
+          // Pronađi prst sa istim ID
+          var touch = null;
+          for (var i = 0; i < e.touches.length; i++) {
+            if (e.touches[i].identifier === longPressTouchId) { touch = e.touches[i]; break; }
+          }
+          if (!touch) return;
+          var dx = Math.abs(touch.clientX - longPressStartX);
+          var dy = Math.abs(touch.clientY - longPressStartY);
+          if (dx > 10 || dy > 10) cancelLongPress();
+        }, { passive: true, capture: true });
+
+        link.addEventListener('touchend', function (e) {
+          cancelLongPress();
+          if (longPressTriggered) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+            longPressTriggered = false;
+          }
+        }, { passive: false, capture: true });
+
+        link.addEventListener('touchcancel', function (e) {
+          cancelLongPress();
+        }, { passive: true, capture: true });
+      }
+
+      // Primeni na sve postojeće linkove
+      function attachAllMobileHandlers() {
+        document.querySelectorAll('.links a[href]').forEach(attachMobileLinkHandlers);
+      }
+
+      // MutationObserver za dinamički dodate linkove (npr. custom links)
+      if (typeof MutationObserver !== 'undefined') {
+        var mo = new MutationObserver(function (mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            var added = mutations[i].addedNodes;
+            for (var j = 0; j < added.length; j++) {
+              var node = added[j];
+              if (node.nodeType !== 1) continue;
+              if (node.tagName === 'A' && node.closest('.links')) {
+                attachMobileLinkHandlers(node);
+              } else if (node.querySelectorAll) {
+                var links = node.querySelectorAll('.links a[href]');
+                for (var k = 0; k < links.length; k++) attachMobileLinkHandlers(links[k]);
+              }
+            }
+          }
+        });
+        mo.observe(document.body, { childList: true, subtree: true });
+      }
 
       // Onemoguci context menu na linkovima na mobilnom
       document.addEventListener('contextmenu', function (e) {
@@ -855,6 +900,7 @@
       applySavedHidden();
       renderFavs();
       renderCustom();
+      attachAllMobileHandlers(); // dodeli touch handlere svim linkovima za long-press
       // Update counts
       document.querySelectorAll('.category').forEach(function (cat) {
         var lc = cat.querySelector('.links');

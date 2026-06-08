@@ -576,44 +576,49 @@ body {
 }
 
 /* ============= TRASH DUGME U HEADERU ============= */
+/* Čist emoji bez button chrome-a: nema min-width, nema min-height,
+   nema display:flex, nema padding-a. Samo emoji + cursor. */
 .trash-zone {
   background: transparent;
   border: none;
   color: var(--text-muted);
-  font-size: 18px;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 6px;
+  font-size: 18px;       /* isti kao 👁 ikonica */
   line-height: 1;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
   font-family: inherit;
-  transition: all 0.15s ease;
-  flex-shrink: 0;
-  min-width: 28px;
-  min-height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: transform 0.15s ease, color 0.15s ease;
+  display: inline-block;
+  -webkit-appearance: none;
+  appearance: none;
+  vertical-align: middle; /* poravnanje sa 👁 */
 }
 
 .trash-zone:hover {
   color: var(--text-color);
-  background-color: transparent;
+  background: transparent;
   border: none;
-  transform: scale(1.1);
+  transform: scale(1.15);
+}
+
+.trash-zone:focus {
+  outline: none; /* ne prikazuj focus outline (izgleda kao okvir) */
 }
 
 .trash-zone:focus-visible {
   outline: 2px solid var(--link-color);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Drop-target stanje — kad se link prevuce iznad trash dugmeta */
 .trash-zone.is-drop-target {
   color: #d9534f;
-  background-color: transparent;
+  background: transparent;
   border: none;
-  transform: scale(1.3);
-  filter: drop-shadow(0 0 8px rgba(217, 83, 79, 0.7));
+  transform: scale(1.4);
+  filter: drop-shadow(0 0 6px rgba(217, 83, 79, 0.8));
 }
 
 /* ============= ACTION SHEET (mobilni long-press) ============= */
