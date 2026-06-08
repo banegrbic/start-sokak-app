@@ -507,6 +507,19 @@
           preventOnFilter: false,
           delay: 50, // smanjeno sa 150 da ne konkuriše sa long-press
           delayOnTouchOnly: true,
+          onMove: function (evt) {
+            // Dozvoli drag SAMO ako korisnik klikne na drag-handle ili
+            // povuci link > 10px (Sortable interni fallback tolerance).
+            // Vraćanje 'false' iz onMove otkazuje drag, browser radi
+            // normalan tap na linku.
+            if (evt.originalEvent && evt.originalEvent.type === 'touchstart') {
+              // Za tap na link, target je <a> — NE dozvoli drag
+              if (evt.related && evt.related.tagName === 'A') {
+                return false;
+              }
+            }
+            return true;
+          },
           onEnd: function () {
             var order = [];
             Array.prototype.slice.call(favZone.querySelectorAll('a.fav-item')).forEach(function (a) {
@@ -669,22 +682,22 @@
         if (link.__kw_mobile_longpress) return; // ne dupliraj
         link.__kw_mobile_longpress = true;
 
+        // ============================================================
+        // touchstart: samo startuj long-press timer. NE blokiraj event
+        // propagaciju (to bi ubilo normalan tap → browser ne generiše
+        // click). Sortable.js će dobiti event na parent-u, ALI sa
+        // delay:50, kratak tap (<50ms) prolazi normalno.
+        // ============================================================
         link.addEventListener('touchstart', function (e) {
-          // Samo na mobilnom
           if (!isMobile()) return;
-          // Samo za prvi prst (ne multi-touch)
           if (e.touches.length !== 1) { cancelLongPress(); return; }
           var touch = e.touches[0];
-          // KRITIČNO: spreči Sortable da uopšte vidi ovaj event
-          e.preventDefault();
-          e.stopPropagation();
-          if (e.stopImmediatePropagation) e.stopImmediatePropagation();
           startLongPress(link, touch.clientX, touch.clientY, touch.identifier);
-        }, { passive: false, capture: true });
+        }, { passive: true, capture: true });
 
+        // touchmove: otkazi long-press ako korisnik pomeri prst > 10px
         link.addEventListener('touchmove', function (e) {
           if (!longPressTimer) return;
-          // Pronađi prst sa istim ID
           var touch = null;
           for (var i = 0; i < e.touches.length; i++) {
             if (e.touches[i].identifier === longPressTouchId) { touch = e.touches[i]; break; }
@@ -695,14 +708,15 @@
           if (dx > 10 || dy > 10) cancelLongPress();
         }, { passive: true, capture: true });
 
+        // touchend: ako je long-press TRIGGER-ovao action sheet, spreči
+        // default tap (da se link ne otvori). Ako nije, pusti browser
+        // da obradi normalan tap.
         link.addEventListener('touchend', function (e) {
-          cancelLongPress();
           if (longPressTriggered) {
             e.preventDefault();
-            e.stopPropagation();
-            if (e.stopImmediatePropagation) e.stopImmediatePropagation();
             longPressTriggered = false;
           }
+          cancelLongPress();
         }, { passive: false, capture: true });
 
         link.addEventListener('touchcancel', function (e) {
@@ -803,6 +817,15 @@
           ghostClass: 'sortable-ghost',
           delay: 50, // smanjeno sa 150 da ne konkuriše sa long-press
           delayOnTouchOnly: true,
+          onMove: function (evt) {
+            // Dozvoli drag samo ako nije tap na <a> link
+            if (evt.originalEvent && evt.originalEvent.type === 'touchstart') {
+              if (evt.related && evt.related.tagName === 'A') {
+                return false;
+              }
+            }
+            return true;
+          },
           onEnd: function () {
             var order = [];
             Array.prototype.slice.call(customZone.querySelectorAll('a.fav-item')).forEach(function (a) {
