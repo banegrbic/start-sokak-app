@@ -390,7 +390,7 @@
           }
           return true;
         },
-        onEnd: function () { saveOrder(); }
+        onEnd: function () { saveOrder(); if (typeof relayoutMasonry === 'function') relayoutMasonry(); }
       });
 
       // ========== VISIBILITY TOGGLE ==========
@@ -440,6 +440,7 @@
                 cat.classList.toggle('is-hidden');
                 saveHidden();
                 updateToggleIcons();
+                if (typeof relayoutMasonry === 'function') relayoutMasonry();
               }
             }
           }, true);
@@ -452,6 +453,7 @@
           document.querySelectorAll('.category.is-hidden').forEach(function (c) { c.classList.remove('is-hidden'); });
           saveHidden();
           updateToggleIcons();
+          if (typeof relayoutMasonry === 'function') relayoutMasonry();
         });
       }
 
@@ -901,6 +903,14 @@
       renderFavs();
       renderCustom();
       attachAllMobileHandlers(); // dodeli touch handlere svim linkovima za long-press
+
+      // ========== LAYOUT (CSS Grid sa dense flow) ==========
+      // CSS Grid sa grid-auto-flow:dense automatski popunjava praznine
+      // u redu, dajuci masonry/Pinterest efekat. Sortable.js (za reorder
+      // kategorija) radi normalno, grid automatski preraspodeli.
+      // Nema JS-a za layout — CSS radi sve.
+      // Ne treba nam relayoutMasonry() vise.
+      function relayoutMasonry() { /* no-op: CSS grid se brine sam */ }
       // Update counts
       document.querySelectorAll('.category').forEach(function (cat) {
         var lc = cat.querySelector('.links');
