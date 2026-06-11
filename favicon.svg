@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="KulaWireless start page icon">
+  <defs>
+    <linearGradient id="arrowFill" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+  </defs>
+  <!-- 16x16 corner square (the "origin" of the link) -->
+  <rect x="10" y="38" width="16" height="16" rx="3" fill="url(#arrowFill)" opacity="0.95"/>
+  <!-- Arrow shaft (diagonal) -->
+  <line x1="18" y1="46" x2="46" y2="18" stroke="url(#arrowFill)" stroke-width="7" stroke-linecap="round"/>
+  <!-- Arrow head (top-right) -->
+  <path d="M 28 18 L 50 18 L 50 40" fill="none" stroke="url(#arrowFill)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
