@@ -271,6 +271,7 @@ body {
   text-align: left;
   cursor: pointer;
   border-radius: calc(var(--radius) - 2px);
+  text-decoration: none; /* za <a> donate link — sprečava browser underline */
   width: 100%;
 }
 
