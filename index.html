@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
     <link rel="shortcut icon" type="image/png" href="favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-precomposed.png" />
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=202606122350" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=202606122342" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -72,6 +72,8 @@
             <button type="button" id="suggestLinkBtn" class="add-custom-btn suggest-btn" title="Predloži link za start.sokak.app">💡 Predloži link</button>
             <button type="button" id="showAllBtn" class="reset-favorites" title="Prikaži sve sakrivene kategorije">Prikaži sve</button>
             <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje</button>
+            <a href="https://paypal.me/emocentrik" id="donateBtn" class="icon-btn toolbar-icon-btn" target="_blank" rel="noopener noreferrer" title="Kupite mi pivo (PayPal)">🍺</a>
+            <button type="button" id="shareBtn" class="icon-btn toolbar-icon-btn" title="Preporučite sajt">📤</button>
         </div>
         <span id="themeToggleWrapper2" class="mobile-only">
             <button type="button" class="theme-toggle-mobile" aria-label="Prebaci temu" title="Prebaci između tamne i svetle teme">☀️</button>
@@ -94,6 +96,14 @@
         <button type="button" class="hamburger-menu-item" data-action="resetFav" role="menuitem">
             <span class="hamburger-menu-icon">🗑</span>
             <span class="hamburger-menu-label">Obriši Moje</span>
+        </button>
+        <a href="https://paypal.me/emocentrik" class="hamburger-menu-item" data-action="donate" role="menuitem" target="_blank" rel="noopener noreferrer">
+            <span class="hamburger-menu-icon">🍺</span>
+            <span class="hamburger-menu-label">Kupite mi pivo</span>
+        </a>
+        <button type="button" class="hamburger-menu-item" data-action="share" role="menuitem">
+            <span class="hamburger-menu-icon">📤</span>
+            <span class="hamburger-menu-label">Preporučite sajt</span>
         </button>
     </div>
     <!-- Modal: Add custom link -->
@@ -1091,7 +1101,8 @@
           var item = e.target.closest('[data-action]');
           if (!item) return;
           var action = item.getAttribute('data-action');
-          closeHamburger();
+          // Za 'donate' (link), NE zatvaraj meni pre nego što browser obradi target=_blank
+          if (action !== 'donate') closeHamburger();
           if (action === 'add' && typeof openAddCustom === 'function') {
             openAddCustom();
           } else if (action === 'suggest' && typeof openSuggest === 'function') {
@@ -1100,6 +1111,10 @@
             var b = document.getElementById('showAllBtn'); if (b) b.click();
           } else if (action === 'resetFav') {
             var b = document.getElementById('resetFavorites'); if (b) b.click();
+          } else if (action === 'share') {
+            var b = document.getElementById('shareBtn'); if (b) b.click();
+          } else if (action === 'donate') {
+            // <a target="_blank"> se otvara automatski, ništa dodatno
           }
         });
       }
@@ -1207,6 +1222,56 @@
         // Tap van hint-a zatvara sve tooltip-ove
         document.addEventListener('click', function (e) {
           if (!e.target.closest || !e.target.closest('.subtitle-hint')) closeAll(null);
+        });
+      })();
+
+      // ========== WEB SHARE API + CLIPBOARD FALLBACK (Preporučite sajt) ==========
+      // Na mobilnom sa podrškom: otvara native share sheet (Viber, WhatsApp, SMS...)
+      // Na desktopu / starijim browserima: kopira URL u clipboard + toast potvrda
+      (function () {
+        var shareBtn = document.getElementById('shareBtn');
+        if (!shareBtn) return;
+        var shareData = {
+          title: 'start.sokak.app',
+          text: 'Početna stranica sa linkovima za sve što ti treba na internetu — pretraga, mediji, portali, društvene mreže, alati, zabava.',
+          url: 'https://start.sokak.app/'
+        };
+        function fallbackCopy() {
+          var txt = shareData.url;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(txt).then(function () {
+              showToast('✓ Link kopiran u clipboard!', false);
+            }, function () {
+              legacyCopy(txt);
+            });
+          } else {
+            legacyCopy(txt);
+          }
+        }
+        function legacyCopy(txt) {
+          // Stari fallback za veoma stare browserе (IE, stari Safari)
+          var ta = document.createElement('textarea');
+          ta.value = txt;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.top = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); showToast('✓ Link kopiran!', false); }
+          catch (e) { showToast('Kopiranje nije uspelo. URL: ' + txt, true); }
+          document.body.removeChild(ta);
+        }
+        shareBtn.addEventListener('click', function () {
+          if (navigator.share) {
+            navigator.share(shareData).catch(function (err) {
+              // Korisnik otkazao share (AbortError) je normalan, ne prikazuj grešku
+              if (err && err.name === 'AbortError') return;
+              // Ako share ne uspe iz nekog razloga, fallback na copy
+              fallbackCopy();
+            });
+          } else {
+            fallbackCopy();
+          }
         });
       })();
 

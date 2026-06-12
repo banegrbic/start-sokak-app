@@ -167,6 +167,40 @@ body {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+/* Ikonice u toolbar-u (donate 🍺, share 📤) — isti stil kao hamburger dugme,
+   ali vidljive na desktopu. Na mobilnom ih sakrivamo (.desktop-only klasa). */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  width: 40px;
+  height: 36px;
+  border-radius: var(--radius);
+  font-size: 18px;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  flex-shrink: 0;
+}
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  background-color: var(--link-bg);
+  border-color: var(--link-color);
+  transform: scale(1.05);
+  outline: none;
+}
+.icon-btn:active {
+  transform: scale(0.95);
 }
 
 /* Hamburger dugme (☰) — vidljiv samo na mobilnom/tabletu */
