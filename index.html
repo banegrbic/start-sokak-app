@@ -875,7 +875,17 @@
       }
       function renderCustom() {
         var items = loadCustom();
+        var wasAlreadyThere = customSection && document.body.contains(customSection);
         ensureCustomSection();
+        // Ako je sekcija tek kreirana, primeni sačuvani hidden state (ako ga ima)
+        // i update-uj ikonice 👁/🚫 da budu konzistentne
+        if (!wasAlreadyThere) {
+          var hidden = load(HIDDEN_KEY, []);
+          if (hidden.indexOf('category-custom-linkovi') !== -1 || hidden.indexOf('Custom linkovi') !== -1) {
+            customSection.classList.add('is-hidden');
+          }
+          updateToggleIcons();
+        }
         // Uvek prikaži sekciju (čak i kada je prazna) — funkcionalnost sakrivanja je na 👁 dugmetu
         // Ukloni sve <a.fav-item> linkove da bi re-renderovao
         Array.prototype.slice.call(customZone.querySelectorAll('a.fav-item')).forEach(function (a) { a.remove(); });
