@@ -1,12 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="KulaWireless start page icon">
-  <!-- Deblja, transparentna pozadina. Boja postavljena na nivo ikonice
-       (neutralan srednji plavi) — vidljiv i na beloj i na tamnoj pozadini. -->
-  <g fill="none" stroke="#4a90e2" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Strelica: linija od kvadrata do vrha -->
-    <line x1="20" y1="44" x2="48" y2="16" />
-    <!-- Glava strelice (gore-desno) -->
-    <polyline points="26,16 48,16 48,38" />
-  </g>
-  <!-- Kvadrat (izvor linka) -->
-  <rect x="6" y="36" width="20" height="20" rx="3" fill="#4a90e2" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="start.sokak.app">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4dabf7"/>
+      <stop offset="100%" stop-color="#339af0"/>
+    </linearGradient>
+  </defs>
+  <!-- Isti dizajn kao logo u toolbar-u: krug + diagonalna strelica (gore-desno) -->
+  <circle cx="16" cy="16" r="14" fill="none" stroke="url(#logoGrad)" stroke-width="2.5"/>
+  <path d="M11 21 L21 11 M21 11 L21 17 M21 11 L15 11"
+        fill="none" stroke="url(#logoGrad)" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
