@@ -230,6 +230,26 @@ body {
   display: none;
 }
 
+/* Mobile theme dugme (unutar wrapper-a) — fiksna veličina 40×36, vidljiv samo kad je wrapper vidljiv */
+#themeToggleWrapper2 .theme-toggle-mobile {
+  width: 40px;
+  height: 36px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+#themeToggleWrapper2 .theme-toggle-mobile:hover {
+  border-color: var(--link-color);
+}
+
 @media (max-width: 899px) {
   .desktop-only {
     display: none !important;
@@ -248,28 +268,10 @@ body {
   }
   /* Novi wrapper u toolbar-u — vidljiv samo na mobilnom, između search i hamburger */
   #themeToggleWrapper2 {
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-  }
-  #themeToggleWrapper2 .theme-toggle-mobile {
-    width: 40px;
-    height: 36px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border-color);
-    background-color: var(--secondary-bg);
-    color: var(--text-color);
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    line-height: 1;
-  }
-  #themeToggleWrapper2 .theme-toggle-mobile:hover {
-    border-color: var(--link-color);
   }
 }
 .search-input {
