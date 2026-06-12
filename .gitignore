@@ -10,3 +10,6 @@ secrets/
 # Runtime data — nikad ne gurati na GitHub
 suggestions.log
 api/suggestions.log
+# Lokalne test skripte
+_test_*.php
+phptest.php
