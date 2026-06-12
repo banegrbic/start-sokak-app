@@ -36,6 +36,14 @@
 - Validacija: URL mora biti http/https sa validnim hostom, SSRF zaštita (blokira localhost/private IP).
 - Browser submit testiran end-to-end (12.6.2026), log potvrđen.
 
+### Link cleanup run #1 (12.6.2026)
+
+- **Healthcheck metod**: 123 unique eksternih linkova, paralelan curl (20 istovremenih) + browser/wget/dns verifikacija sumnjivih.
+- **Izbačeno**: 24sata.rs (preusmeren na vijetnamski piratski streaming), netkolumne.com (preusmeren na ASTROSLOT kockanje), TV program/aladin.info (korisnik rekao da ga izbaci uprkos 200 statusu).
+- **Update-ovano**: yts.ag→yts.bz, divx-titlovi.com→titlovi.com, rs.sputniknews.com→sputnikportal.rs, kurir-info.rs→kurir.rs, zurnal.rs→zurnal.politika.rs.
+- **Lažno pozitivni** (Cloudflare/anti-bot): rockradio.rs, halooglasi.com, hattrick.org, polovniautomobili.com, istinomer.rs, chat.openai.com, pixabay.com, twitter.com, filehippo.com, brave.com — svi provereni u browser-u, aktivni su.
+- **Svaštara ostavljena** — korisnik potvrdio da radi (ja ne vidim zbog Cloudflare zaštite, korisnik vidi normalno).
+
 ### Planirano (kad korisnik bude hteo)
 
 - **Email format/template** — trenutno plain HTML sa tabelom, može lepši branded template.
