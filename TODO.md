@@ -115,6 +115,21 @@
 - **Posledica (jednom se desilo)**: Favicon PNG fajlovi obrisani sa servera. Vraćeni ručno preko `scp` iz lokalnog source-a.
 - **Pravilo za ubuduće**: Nikada ne koristiti `--delete` flag na rsync za KulaWireless deploy. Koristiti `scp` za pojedinačne fajlove, ili rsync bez `--delete` uz ručnu proveru šta se šalje.
 
+### Auto-bump deploy skripte (12.6.2026, commits `8765352` + `601d60d`)
+
+- **Problem**: Browser drži stari `responsive.css` jer `index.html` u kešu referencira stari `?v=...`. Korisnik prijavio da izmene nisu vidljive posle deploy-a.
+- **Rešenje**: `scripts/deploy.sh` + `scripts/bump-version.sh` automatski bumpuju `?v=` na svaki deploy (timestamp `YYYYMMDDHHMM`).
+- **Workflow**:
+  ```bash
+  ./scripts/deploy.sh "kratak opis izmene"  # sve u jednoj komandi
+  ```
+  1. Bump `?v=20260612g` → `?v=202606121730`
+  2. git add + commit + push
+  3. SCP svih 8 fajlova
+  4. curl verifikacija
+- **Bag u prvoj verziji skripte**: sed replace duplirao string (`responsive.css?` + `$OLD_V` koji već sadrži prefix) — fajl ostao nepromenjen a skripta javila "uspeh". Fix: izdvojiti SAMO `?v=...` deo pre replace-a.
+- **Bag u prvoj verziji verifikacije**: `grep -oE '\?v=...'` hvata i `apple-touch-icon ?v=2` pa lažno potvrđuje deploy. Fix: filtrirati samo `responsive.css\?v=...`.
+
 ### Planirano (kad korisnik bude hteo)
 
 - **Email format/template** — trenutno plain HTML sa tabelom, može lepši branded template.
