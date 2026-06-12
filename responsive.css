@@ -157,12 +157,14 @@ body {
   color: #fff;
 }
 
-/* Padajući hamburger meni */
+/* Padajući hamburger meni — position: fixed da uvek bude vidljiv kad je otvoren,
+   čak i kad je stranica skrolovana. Toolbar je position: sticky top:0, pa je
+   menu top:56px tačno ispod njega bez obzira na scroll poziciju. */
 .hamburger-menu {
-  position: absolute;
+  position: fixed;
   right: 14px;
-  top: 56px; /* ispod toolbar-a */
-  z-index: 99;
+  top: 56px; /* ispod toolbar-a (visina ~56px) */
+  z-index: 200; /* iznad toolbara (100), ispod modala (2000) */
   background-color: var(--secondary-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
