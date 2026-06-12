@@ -90,6 +90,13 @@
 - **Verifikacija**: desktop sakriven hamburger (display:none), mobilni vidi ☰; testirano open/close, akcija "Dodaj link" otvara modal.
 - **Commit:** `90eaf26` (2 files, 210 ins, 10 del)
 
+### Hamburger menu position: fixed (12.6.2026, fix)
+
+- **Problem**: Hamburger menu je bio `position: absolute; top: 56px` u odnosu na dokument. Kad je stranica skrolovana dole, meni se pojavljivao na `y=56` od dokumenta (dakle iznad viewporta) umesto u vidljivom delu ekrana.
+- **Rešenje**: Promenjen na `position: fixed; top: 56px; right: 14px; z-index: 200`. Toolbar je `position: sticky; top: 0`, pa je meni uvek tačno ispod njega bez obzira na scroll poziciju.
+- **Verifikacija** (CSS override + padding simulation): meni ostaje na `y=56` posle 300px, 800px i 1200px skrola.
+- **Commit:** `4c2cd19` (2 files, 7 ins, 5 del).
+
 ### Mobilni theme toggle u toolbar-u (12.6.2026, fix)
 
 - **Problem**: Stari `<button class="theme-toggle">` je `position: fixed; top:16; right:16` u gornjem desnom uglu, fiksno vidljiv na svim viewport-ovima. Na mobilnom (<900px) je prekrivao hamburger ☰ u istom prostoru.
