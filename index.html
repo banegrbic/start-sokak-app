@@ -45,24 +45,6 @@
           btn.addEventListener('click', function () { apply(current() === 'light' ? 'dark' : 'light'); });
         }
       })();
-      // Mobile theme toggle (u toolbar-u) — triggeruje istu logiku kao stari #themeToggle
-      (function () {
-        var mobileBtn = document.querySelector('#themeToggleWrapper2 .theme-toggle-mobile');
-        var mainBtn = document.getElementById('themeToggle');
-        function syncIcon() {
-          if (!mobileBtn) return;
-          var isLight = document.documentElement.getAttribute('data-theme') === 'light';
-          mobileBtn.textContent = isLight ? '🌙' : '☀️';
-        }
-        if (mobileBtn && mainBtn) {
-          syncIcon();
-          // Osluškuj promene data-theme atributa (kad se toggleuje preko starog dugmeta)
-          new MutationObserver(syncIcon).observe(document.documentElement, {
-            attributes: true, attributeFilter: ['data-theme']
-          });
-          mobileBtn.addEventListener('click', function () { mainBtn.click(); });
-        }
-      })();
     </script>
     <div class="toolbar">
         <div class="toolbar-left">
@@ -1211,6 +1193,21 @@
         var n = lc.querySelectorAll('a[href]').length;
         if (n > 0) countEl.textContent = '(' + n + ')';
       });
+    })();
+    // Mobile theme toggle (u toolbar-u) — vidljiv samo na <900px, okida isti #themeToggle handler
+    (function () {
+      var mobileBtn = document.querySelector('#themeToggleWrapper2 .theme-toggle-mobile');
+      var mainBtn = document.getElementById('themeToggle');
+      if (!mobileBtn || !mainBtn) return;
+      function syncIcon() {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        mobileBtn.textContent = isLight ? '🌙' : '☀️';
+      }
+      syncIcon();
+      new MutationObserver(syncIcon).observe(document.documentElement, {
+        attributes: true, attributeFilter: ['data-theme']
+      });
+      mobileBtn.addEventListener('click', function () { mainBtn.click(); });
     })();
     </script>
 </body>
