@@ -101,6 +101,8 @@ body {
 }
 
 /* ============= TOOLBAR (search + reset) ============= */
+/* Poravnat sa kategorijama ispod (isti max-width: 1200px + 80px padding).
+   Na <768px se padding smanjuje na 12px (vidi media query dole). */
 .toolbar {
   position: sticky;
   top: 0;
@@ -108,10 +110,50 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 14px;
+  padding: 10px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
   background-color: var(--primary-bg);
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Logo (start.sokak.app) — levo od search polja */
+.toolbar-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-color);
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  transition: background-color var(--transition);
+}
+.toolbar-logo:hover {
+  background-color: var(--link-bg);
+}
+.toolbar-logo .logo-icon {
+  display: block;
+  flex-shrink: 0;
+}
+.toolbar-logo .logo-text {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.toolbar-logo .logo-text small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 1px;
+}
+/* Na uskim ekranima sakrij tekst, ostavi samo SVG */
+@media (max-width: 480px) {
+  .toolbar-logo .logo-text { display: none; }
+  .toolbar { padding: 10px 12px; }
+  .toolbar-left { gap: 6px; }
 }
 
 .toolbar-left {
@@ -635,23 +677,74 @@ body {
   vertical-align: -2px;
 }
 
-/* Subtitle (manji tekst pored naslova, npr. "Nezavisni i slobodni mediji") */
+/* Subtitle (manji tekst pored naslova, npr. "Nezavisni i slobodni mediji")
+   Na desktopu: inline tekst vidljiv.
+   Na <600px: tekst sakriven, umesto njega hint ⓘ dugme koje prikazuje tooltip. */
 .category-header h2 .subtitle {
   display: inline-block;
   font-size: 11px;
   font-weight: 400;
   color: var(--text-muted);
-  margin-left: 8px;
   font-style: italic;
+  margin-left: 4px;
+}
+
+/* Hint dugme (ⓘ) — vidljivo samo na <600px (mobilni).
+   Na desktopu je skriveno jer je tekst već inline. */
+.subtitle-hint {
+  display: none;
+  background: transparent;
+  border: 0;
+  padding: 0 2px;
+  margin-left: 2px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  position: relative;
+  line-height: 1;
   vertical-align: middle;
+}
+.subtitle-hint:hover { color: var(--link-color); }
+.subtitle-hint:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+/* Tooltip (sakriven po defaultu, prikazuje se na .show klasu) */
+.subtitle-tooltip {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 200;
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 400;
+  font-style: italic;
+  white-space: normal;
+  max-width: 240px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+.subtitle-hint.show .subtitle-tooltip,
+.subtitle-hint:hover .subtitle-tooltip,
+.subtitle-hint:focus .subtitle-tooltip {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 @media (max-width: 600px) {
   .category-header h2 .subtitle {
-    display: block;
-    margin-left: 24px; /* offset for emoji */
-    margin-top: 2px;
-    font-size: 10px;
+    display: none; /* sakrij inline tekst na mobilnom — hint ⓘ ga zamenjuje */
+  }
+  .subtitle-hint {
+    display: inline-block; /* prikaži ⓘ dugme na mobilnom */
   }
 }
 

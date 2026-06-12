@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABF0lEQVR4nKRTP0/CQBz9/Q4JOqjRD1AZHY270bHqbOLg4uRqE3frJ6j6CRhgJIEFCGGAhC/BSBMmFgj/FtrHtVBoyQFN+pa+vrv3fne/uxOUEIIS4kglPv4jA6d3S4RMWAe5N3DQr39lC3sD2LGLzPysGJEOJt2y0zVDy+0MOAQZru1dwZTO3o5p9C6AcxAemMV9JACwA65sYtO4GNQ+NWtZLWrexs5TeLK6pnR/rwWgHDtAYf6Raymp5vo90P/sVwHKS5pae8jvuW+uGFem/tt9EUuFXMYkEiBcXMuKqXBy2OzR+clpPT0btwMeCVABcFtVI2sG/42Py6H83Cm3oAITNykGVk3kjndPN+U9LrUYYEqIxK9xAQAA//9t087eAAAABklEQVQDAKJ0V71C0n7OAAAAAElFTkSuQmCC" />
     <link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABcklEQVR4nOyWsUrEQBCG/wliZ3sKcieCD2IZtZQTrC1VSCpr3yCgWMhpa2Gr5Frfw0LvsBMLOwtvnBULL5m4m2xCLPJxRW4yu//P7GSSAC0ToGU6A60bWCiTHCbPQwLtgrFiz+YeiNbl4hPMozRei7QsgiNhMj0IwCNUZAZcjKPBYTbufAQE3oEHsn5fi5c6Ai+YFrWwcwUYdA8PGHjS4s4VGEf9K2nCd3E8ZKZeZvNVImz8jmWbS/6/avs6N2ERW8n0SM73DPOGchsz4yGNB5vZ9V49oImXpbKBOsQNlSahTVzK/YimDFjFQcdy/i9owoCLeBr1z1EC5x5oQjxnIEwmccB8Ki+RJU3i+0fKI1ZRPGdAXjYnuvgPpNlSxAlvytp8DLkeoGVYIJs4CsY24w52A+78VXYztmfgPcm6lcQbcy1T8FrLnSvqdjJheIqXpdIkrEvc0H2U/i8DzHzJ4I+iZHPP5KBGvD9IfOl6oHUDXwAAAP//FTQR/AAAAAZJREFUAwDNWIkycnxQPwAAAABJRU5ErkJggg==" />
     <link rel="apple-touch-icon" href="favicon-64.png?v=2" />
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=202606121752" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=202606122238" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -47,6 +47,22 @@
       })();
     </script>
     <div class="toolbar">
+        <a href="/" class="toolbar-logo" aria-label="start.sokak.app — početna">
+            <svg class="logo-icon" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+                <defs>
+                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#4dabf7"/>
+                        <stop offset="100%" stop-color="#339af0"/>
+                    </linearGradient>
+                </defs>
+                <!-- Strelica/raketa u krugu — "start" metafora -->
+                <circle cx="16" cy="16" r="14" fill="none" stroke="url(#logoGrad)" stroke-width="2.5"/>
+                <path d="M11 21 L21 11 M21 11 L21 17 M21 11 L15 11"
+                      fill="none" stroke="url(#logoGrad)" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="logo-text">start<small>.sokak.app</small></span>
+        </a>
         <div class="toolbar-left">
             <input type="search" id="searchInput" class="search-input" placeholder="🔍 Filtriraj linkove..." aria-label="Filtriraj linkove" autocomplete="off" />
             <span id="searchCount" class="search-count" aria-live="polite"></span>
@@ -170,7 +186,7 @@
         <section class="category" id="category-mediji" data-category-name="Mediji">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2><span class="category-icon">📰</span> Mediji <span class="subtitle">Nezavisni i slobodni mediji</span> <span class="count" data-count></span></h2>
+            <h2><span class="category-icon">📰</span> Mediji <button type="button" class="subtitle-hint" data-subtitle="Nezavisni i slobodni mediji" aria-label="Pokaži opis kategorije">ⓘ<span class="subtitle-tooltip">Nezavisni i slobodni mediji</span></button> <span class="subtitle" data-subtitle="Nezavisni i slobodni mediji">Nezavisni i slobodni mediji</span> <span class="count" data-count></span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
           </header>
           <div class="links">
@@ -200,7 +216,7 @@
         <section class="category" id="category-portali" data-category-name="Portali">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2><span class="category-icon">📰</span> Portali <span class="subtitle">Uključuje tabloidne news portale</span> <span class="count" data-count></span></h2>
+            <h2><span class="category-icon">📰</span> Portali <button type="button" class="subtitle-hint" data-subtitle="Uključuje tabloidne news portale" aria-label="Pokaži opis kategorije">ⓘ<span class="subtitle-tooltip">Uključuje tabloidne news portale</span></button> <span class="subtitle" data-subtitle="Uključuje tabloidne news portale">Uključuje tabloidne news portale</span> <span class="count" data-count></span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
           </header>
           <div class="links">
@@ -1169,6 +1185,30 @@
           });
         });
       }
+
+      // ========== SUBTITLE HINT (ⓘ dugme) ==========
+      // Na mobilnom (<600px) tekst "Nezavisni i slobodni mediji" je sakriven
+      // (CSS), a ⓘ dugme ga zamenjuje. Tap na ⓘ prikazuje tooltip; tap van
+      // zatvara. Na desktopu dugme nije vidljivo (CSS) — tekst je inline.
+      (function () {
+        var hints = document.querySelectorAll('.subtitle-hint');
+        if (!hints.length) return;
+        function closeAll(except) {
+          hints.forEach(function (h) { if (h !== except) h.classList.remove('show'); });
+        }
+        hints.forEach(function (hint) {
+          hint.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var wasOpen = hint.classList.contains('show');
+            closeAll(hint);
+            if (!wasOpen) hint.classList.add('show');
+          });
+        });
+        // Tap van hint-a zatvara sve tooltip-ove
+        document.addEventListener('click', function (e) {
+          if (!e.target.closest || !e.target.closest('.subtitle-hint')) closeAll(null);
+        });
+      })();
 
       // ========== INITIALIZE ==========
       applySavedOrder();
