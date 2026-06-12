@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABF0lEQVR4nKRTP0/CQBz9/Q4JOqjRD1AZHY270bHqbOLg4uRqE3frJ6j6CRhgJIEFCGGAhC/BSBMmFgj/FtrHtVBoyQFN+pa+vrv3fne/uxOUEIIS4kglPv4jA6d3S4RMWAe5N3DQr39lC3sD2LGLzPysGJEOJt2y0zVDy+0MOAQZru1dwZTO3o5p9C6AcxAemMV9JACwA65sYtO4GNQ+NWtZLWrexs5TeLK6pnR/rwWgHDtAYf6Raymp5vo90P/sVwHKS5pae8jvuW+uGFem/tt9EUuFXMYkEiBcXMuKqXBy2OzR+clpPT0btwMeCVABcFtVI2sG/42Py6H83Cm3oAITNykGVk3kjndPN+U9LrUYYEqIxK9xAQAA//9t087eAAAABklEQVQDAKJ0V71C0n7OAAAAAElFTkSuQmCC" />
     <link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABcklEQVR4nOyWsUrEQBCG/wliZ3sKcieCD2IZtZQTrC1VSCpr3yCgWMhpa2Gr5Frfw0LvsBMLOwtvnBULL5m4m2xCLPJxRW4yu//P7GSSAC0ToGU6A60bWCiTHCbPQwLtgrFiz+YeiNbl4hPMozRei7QsgiNhMj0IwCNUZAZcjKPBYTbufAQE3oEHsn5fi5c6Ai+YFrWwcwUYdA8PGHjS4s4VGEf9K2nCd3E8ZKZeZvNVImz8jmWbS/6/avs6N2ERW8n0SM73DPOGchsz4yGNB5vZ9V49oImXpbKBOsQNlSahTVzK/YimDFjFQcdy/i9owoCLeBr1z1EC5x5oQjxnIEwmccB8Ki+RJU3i+0fKI1ZRPGdAXjYnuvgPpNlSxAlvytp8DLkeoGVYIJs4CsY24w52A+78VXYztmfgPcm6lcQbcy1T8FrLnSvqdjJheIqXpdIkrEvc0H2U/i8DzHzJ4I+iZHPP5KBGvD9IfOl6oHUDXwAAAP//FTQR/AAAAAZJREFUAwDNWIkycnxQPwAAAABJRU5ErkJggg==" />
     <link rel="apple-touch-icon" href="favicon-64.png?v=2" />
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260612b" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260612c" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -47,12 +47,35 @@
       })();
     </script>
     <div class="toolbar">
-        <input type="search" id="searchInput" class="search-input" placeholder="🔍 Filtriraj linkove..." aria-label="Filtriraj linkove" autocomplete="off" />
-        <span id="searchCount" class="search-count" aria-live="polite"></span>
-        <button type="button" id="addCustomBtn" class="add-custom-btn" title="Dodaj novi custom link">＋ Dodaj link</button>
-        <button type="button" id="suggestLinkBtn" class="add-custom-btn suggest-btn" title="Predloži link za KulaWireless">💡 Predloži link</button>
-        <button type="button" id="showAllBtn" class="reset-favorites" title="Prikaži sve sakrivene kategorije">Prikaži sve</button>
-        <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje</button>
+        <div class="toolbar-left">
+            <input type="search" id="searchInput" class="search-input" placeholder="🔍 Filtriraj linkove..." aria-label="Filtriraj linkove" autocomplete="off" />
+            <span id="searchCount" class="search-count" aria-live="polite"></span>
+        </div>
+        <div class="toolbar-right desktop-only">
+            <button type="button" id="addCustomBtn" class="add-custom-btn" title="Dodaj novi custom link">＋ Dodaj link</button>
+            <button type="button" id="suggestLinkBtn" class="add-custom-btn suggest-btn" title="Predloži link za KulaWireless">💡 Predloži link</button>
+            <button type="button" id="showAllBtn" class="reset-favorites" title="Prikaži sve sakrivene kategorije">Prikaži sve</button>
+            <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje</button>
+        </div>
+        <button type="button" id="hamburgerBtn" class="hamburger-btn mobile-only" aria-label="Otvori meni opcija" title="Meni opcija" aria-expanded="false" aria-controls="hamburgerMenu">☰</button>
+    </div>
+    <div id="hamburgerMenu" class="hamburger-menu mobile-only" hidden role="menu">
+        <button type="button" class="hamburger-menu-item" data-action="add" role="menuitem">
+            <span class="hamburger-menu-icon">＋</span>
+            <span class="hamburger-menu-label">Dodaj link</span>
+        </button>
+        <button type="button" class="hamburger-menu-item" data-action="suggest" role="menuitem">
+            <span class="hamburger-menu-icon">💡</span>
+            <span class="hamburger-menu-label">Predloži link</span>
+        </button>
+        <button type="button" class="hamburger-menu-item" data-action="showAll" role="menuitem">
+            <span class="hamburger-menu-icon">👁</span>
+            <span class="hamburger-menu-label">Prikaži sve</span>
+        </button>
+        <button type="button" class="hamburger-menu-item" data-action="resetFav" role="menuitem">
+            <span class="hamburger-menu-icon">🗑</span>
+            <span class="hamburger-menu-label">Obriši Moje</span>
+        </button>
     </div>
     <!-- Modal: Add custom link -->
     <div id="addCustomModal" class="modal-overlay" hidden>
@@ -1006,6 +1029,60 @@
           var urlInput = suggestForm && suggestForm.querySelector('input[name="url"]');
           if (urlInput) urlInput.focus();
         }, 50);
+      }
+
+      // ========== HAMBURGER MENI (mobilni/tablet) ==========
+      // Klik na ☰ otvara padajući meni sa 4 akcije (Dodaj, Predloži, Prikaži sve, Obriši Moje).
+      // Desktop (≥900px) ga sakriva CSS-om.
+      var hamburgerBtn = document.getElementById('hamburgerBtn');
+      var hamburgerMenu = document.getElementById('hamburgerMenu');
+      function openHamburger() {
+        if (!hamburgerMenu || !hamburgerBtn) return;
+        hamburgerMenu.hidden = false;
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+        hamburgerBtn.setAttribute('aria-label', 'Zatvori meni opcija');
+      }
+      function closeHamburger() {
+        if (!hamburgerMenu || !hamburgerBtn) return;
+        hamburgerMenu.hidden = true;
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        hamburgerBtn.setAttribute('aria-label', 'Otvori meni opcija');
+      }
+      function toggleHamburger() {
+        if (!hamburgerMenu) return;
+        if (hamburgerMenu.hidden) openHamburger();
+        else closeHamburger();
+      }
+      if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggleHamburger();
+        });
+      }
+      // Klik van menija ili na dugme ☰ — NE zatvori (posebno gore), ostalo zatvara
+      document.addEventListener('click', function (e) {
+        if (!hamburgerMenu || hamburgerMenu.hidden) return;
+        if (e.target.closest('#hamburgerMenu')) return;
+        if (e.target.closest('#hamburgerBtn')) return;
+        closeHamburger();
+      });
+      // Klik na stavku menija — zatvori meni, izvrši akciju
+      if (hamburgerMenu) {
+        hamburgerMenu.addEventListener('click', function (e) {
+          var item = e.target.closest('[data-action]');
+          if (!item) return;
+          var action = item.getAttribute('data-action');
+          closeHamburger();
+          if (action === 'add' && typeof openAddCustom === 'function') {
+            openAddCustom();
+          } else if (action === 'suggest' && typeof openSuggest === 'function') {
+            openSuggest();
+          } else if (action === 'showAll') {
+            var b = document.getElementById('showAllBtn'); if (b) b.click();
+          } else if (action === 'resetFav') {
+            var b = document.getElementById('resetFavorites'); if (b) b.click();
+          }
+        });
       }
 
       function closeSuggest() {
