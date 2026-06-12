@@ -74,6 +74,13 @@
 - **renderCustom()** refaktorisana: sekcija se NE briše kada je prazna, samo prikazuje "Dodaj link dugmetom 'Dodaj link' iznad"
 - **Commit:** `311b678` (2 files, 166 ins, 112 del)
 
+### Custom linkovi sakrivanje fix (12.6.2026)
+
+- **Bug**: `applySavedHidden()` se zvao na load-u, ali Custom sekcija se kreira dinamički u `renderCustom()` KASNIJE. Tako da hidden state nikad nije bio primenjen na Custom.
+- **Fix**: posle `ensureCustomSection()` u `renderCustom()`, proveri da li je sekcija tek kreirana — ako jeste, primeni hidden state iz localStorage i update-uj ikonice.
+- **Rezultat**: Custom linkovi se ponašaju isto kao i druge kategorije — 👁 sakriva, "Prikaži sve" vraća, refresh pamti.
+- **Commit:** `830eb6a` (1 file, 10 ins)
+
 ### Planirano (kad korisnik bude hteo)
 
 - **Email format/template** — trenutno plain HTML sa tabelom, može lepši branded template.
