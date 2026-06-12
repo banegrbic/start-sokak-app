@@ -90,6 +90,24 @@
 - **Verifikacija**: desktop sakriven hamburger (display:none), mobilni vidi ☰; testirano open/close, akcija "Dodaj link" otvara modal.
 - **Commit:** `90eaf26` (2 files, 210 ins, 10 del)
 
+### Mobilni theme toggle u toolbar-u (12.6.2026, fix)
+
+- **Problem**: Stari `<button class="theme-toggle">` je `position: fixed; top:16; right:16` u gornjem desnom uglu, fiksno vidljiv na svim viewport-ovima. Na mobilnom (<900px) je prekrivao hamburger ☰ u istom prostoru.
+- **Rešenje**:
+  - HTML: Dodat `<span id="themeToggleWrapper2">` sa `<button class="theme-toggle-mobile">` unutar toolbara, između search i hamburger.
+  - CSS: Stari `.theme-toggle` → `display: none !important` na <900px. Novi wrapper → `display: inline-flex` na <900px, `display: none` na desktopu.
+  - JS: Mobile theme dugme okida `mainBtn.click()` (poziva isti handler kao stari #themeToggle), MutationObserver prati `data-theme` atribut i ažurira ikonu (☀️/🌙).
+- **DOM order bug**: Početno IIFE postavljen na vrhu body-ja, ALI `#themeToggleWrapper2` se nalazi u toolbar-u niže — handler se nikad ne bi ni instalirao. Rešeno: premešten na kraj body-ja (posle toolbar DOM-a).
+- **Lekcija za budućnost**: Ako skripta zavisi od elementa koji se pojavi kasnije u dokumentu, staviti skriptu POSLE tog elementa ili koristiti `DOMContentLoaded`.
+- **Verifikacija** (CSS override simulira mobilni): search (x=14) → theme wrapper (x=1163, 40×36) → hamburger (x=1211, 40×36). Redosled tačan, razmaci 8px.
+- **Commit-ovi:** `55b6a8c` (HTML+CSS), `ba6864c` (CSS base stilovi van media query), `ea61779` (DOM order fix).
+
+### ⚠️ Deploy lekcija (12.6.2026, kritično)
+
+- **Problem**: `rsync --delete` sa lokalnog projektnog foldera na server OBRIŠE sve što nije u source direktorijumu — uključujući favicon PNG fajlove, .htaccess, error_log i stare backup foldere na serveru.
+- **Posledica (jednom se desilo)**: Favicon PNG fajlovi obrisani sa servera. Vraćeni ručno preko `scp` iz lokalnog source-a.
+- **Pravilo za ubuduće**: Nikada ne koristiti `--delete` flag na rsync za KulaWireless deploy. Koristiti `scp` za pojedinačne fajlove, ili rsync bez `--delete` uz ručnu proveru šta se šalje.
+
 ### Planirano (kad korisnik bude hteo)
 
 - **Email format/template** — trenutno plain HTML sa tabelom, može lepši branded template.
