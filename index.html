@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABF0lEQVR4nKRTP0/CQBz9/Q4JOqjRD1AZHY270bHqbOLg4uRqE3frJ6j6CRhgJIEFCGGAhC/BSBMmFgj/FtrHtVBoyQFN+pa+vrv3fne/uxOUEIIS4kglPv4jA6d3S4RMWAe5N3DQr39lC3sD2LGLzPysGJEOJt2y0zVDy+0MOAQZru1dwZTO3o5p9C6AcxAemMV9JACwA65sYtO4GNQ+NWtZLWrexs5TeLK6pnR/rwWgHDtAYf6Raymp5vo90P/sVwHKS5pae8jvuW+uGFem/tt9EUuFXMYkEiBcXMuKqXBy2OzR+clpPT0btwMeCVABcFtVI2sG/42Py6H83Cm3oAITNykGVk3kjndPN+U9LrUYYEqIxK9xAQAA//9t087eAAAABklEQVQDAKJ0V71C0n7OAAAAAElFTkSuQmCC" />
     <link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABcklEQVR4nOyWsUrEQBCG/wliZ3sKcieCD2IZtZQTrC1VSCpr3yCgWMhpa2Gr5Frfw0LvsBMLOwtvnBULL5m4m2xCLPJxRW4yu//P7GSSAC0ToGU6A60bWCiTHCbPQwLtgrFiz+YeiNbl4hPMozRei7QsgiNhMj0IwCNUZAZcjKPBYTbufAQE3oEHsn5fi5c6Ai+YFrWwcwUYdA8PGHjS4s4VGEf9K2nCd3E8ZKZeZvNVImz8jmWbS/6/avs6N2ERW8n0SM73DPOGchsz4yGNB5vZ9V49oImXpbKBOsQNlSahTVzK/YimDFjFQcdy/i9owoCLeBr1z1EC5x5oQjxnIEwmccB8Ki+RJU3i+0fKI1ZRPGdAXjYnuvgPpNlSxAlvytp8DLkeoGVYIJs4CsY24w52A+78VXYztmfgPcm6lcQbcy1T8FrLnSvqdjJheIqXpdIkrEvc0H2U/i8DzHzJ4I+iZHPP5KBGvD9IfOl6oHUDXwAAAP//FTQR/AAAAAZJREFUAwDNWIkycnxQPwAAAABJRU5ErkJggg==" />
     <link rel="apple-touch-icon" href="favicon-64.png?v=2" />
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260612a" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260612b" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -103,16 +103,15 @@
             <p class="empty-message" data-empty>Ovde prevucite omiljene linkove</p>
           </div>
         </section>
-        <section class="category" id="category-pretraga-i-posta" data-category-name="Pretraga i pošta">
+        <section class="category" id="category-pretraga-i-posta" data-category-name="Pretraga, pošta, AI">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Pretraga i pošta <span class="count" data-count></span></h2>
+            <h2><span class="category-icon">🔍</span> Pretraga, pošta, AI <span class="count" data-count></span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
           </header>
           <div class="links">
                     <a href="http://www.google.com/" draggable="true" data-href="http://www.google.com/" data-name="Google">Google</a>
                     <a href="http://www.gmail.com/" draggable="true" data-href="http://www.gmail.com/" data-name="Gmail">Gmail</a>
-                    <a href="http://www.youtube.com/" draggable="true" data-href="http://www.youtube.com/" data-name="YouTube">YouTube</a>
                     <a href="http://mail.yahoo.com/" draggable="true" data-href="http://mail.yahoo.com/" data-name="Yahoo Mail">Yahoo Mail</a>
                     <a href="http://www.bing.com/" draggable="true" data-href="http://www.bing.com/" data-name="Bing">Bing</a>
                     <a href="http://en.wikipedia.org/wiki/Main_Page" draggable="true" data-href="http://en.wikipedia.org/wiki/Main_Page" data-name="Wikipedia">Wikipedia</a>
@@ -125,111 +124,38 @@
                     <a href="https://mail.proton.me/" draggable="true" data-href="https://mail.proton.me/" data-name="ProtonMail">ProtonMail</a>
           </div>
         </section>
-        <section class="category" id="category-globalni-servisi" data-category-name="Globalni servisi">
+        <section class="category" id="category-drustvene-mreze" data-category-name="Društvene mreže">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Globalni servisi <span class="count" data-count></span></h2>
+            <h2><span class="category-icon">👥</span> Društvene mreže <span class="count" data-count></span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
           </header>
           <div class="links">
-                    <a href="https://pixabay.com/" draggable="true" data-href="https://pixabay.com/" data-name="Pixabay">Pixabay</a>
-                    <a href="https://www.aliexpress.com/" draggable="true" data-href="https://www.aliexpress.com/" data-name="AliExpress">AliExpress</a>
-                    <a href="http://www.ebay.com/" draggable="true" data-href="http://www.ebay.com/" data-name="eBay">eBay</a>
-                    <a href="http://www.amazon.com/" draggable="true" data-href="http://www.amazon.com/" data-name="Amazon">Amazon</a>
-                    <a href="https://feedly.com/" draggable="true" data-href="https://feedly.com/" data-name="Feedly">Feedly</a>
-                    <a href="http://www.blogger.com/" draggable="true" data-href="http://www.blogger.com/" data-name="Blogger">Blogger</a>
-                    <a href="https://imgur.com/" draggable="true" data-href="https://imgur.com/" data-name="Imgur">Imgur</a>
-                    <a href="http://thepiratebay.org/" draggable="true" data-href="http://thepiratebay.org/" data-name="ThePirateBay">ThePirateBay</a>
-          </div>
-        </section>
-        <section class="category" id="category-domaci-servisi" data-category-name="Domaći servisi">
-          <header class="category-header">
-            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Domaći servisi <span class="count" data-count></span></h2>
-            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
-          </header>
-          <div class="links">
-                    <a href="https://moj.esdnevnik.rs/login" draggable="true" data-href="https://moj.esdnevnik.rs/login" data-name="moj esDnevnik">moj esDnevnik</a>
-                    <a href="https://11811.rs/" draggable="true" data-href="https://11811.rs/" data-name="Bele strane">Bele strane</a>
-                    <a href="http://www.infostud.com/" draggable="true" data-href="http://www.infostud.com/" data-name="Infostud">Infostud</a>
-                    <a href="https://euprava.gov.rs/" draggable="true" data-href="https://euprava.gov.rs/" data-name="eUprava">eUprava</a>
-                    <a href="http://www.apr.gov.rs/" draggable="true" data-href="http://www.apr.gov.rs/" data-name="APR">APR</a>
-                    <a href="http://www.weather2umbrella.com/" draggable="true" data-href="http://www.weather2umbrella.com/" data-name="Weather2Umbrella">Weather2Umbrella</a>
-                    <a href="https://eon.tv/" draggable="true" data-href="https://eon.tv/" data-name="EON">EON</a>
-          </div>
-        </section>
-        <section class="category" id="category-alati-i-produktivnost" data-category-name="Alati i produktivnost">
-          <header class="category-header">
-            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Alati i produktivnost <span class="count" data-count></span></h2>
-            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
-          </header>
-          <div class="links">
-                    <a href="http://translate.google.com/" draggable="true" data-href="http://translate.google.com/" data-name="Translate">Translate</a>
-                    <a href="https://www.google.com/drive/" draggable="true" data-href="https://www.google.com/drive/" data-name="Drive">Drive</a>
-                    <a href="https://www.dropbox.com/" draggable="true" data-href="https://www.dropbox.com/" data-name="Dropbox">Dropbox</a>
-                    <a href="https://maps.google.com/" draggable="true" data-href="https://maps.google.com/" data-name="Google Maps">Google Maps</a>
-                    <a href="https://photos.google.com/" draggable="true" data-href="https://photos.google.com/" data-name="Google Photos">Google Photos</a>
-                    <a href="http://www.filehippo.com/" draggable="true" data-href="http://www.filehippo.com/" data-name="FileHippo">FileHippo</a>
-          </div>
-        </section>
-        <section class="category" id="category-zabava" data-category-name="Zabava">
-          <header class="category-header">
-            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Zabava <span class="count" data-count></span></h2>
-            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
-          </header>
-          <div class="links">
-                    <a href="http://www.njuz.net/" draggable="true" data-href="http://www.njuz.net/" data-name="Njuz">Njuz</a>
-                    <a href="http://ispovesti.com/" draggable="true" data-href="http://ispovesti.com/" data-name="Ispovesti">Ispovesti</a>
-                    <a href="http://vukajlija.com/" draggable="true" data-href="http://vukajlija.com/" data-name="Vukajlija">Vukajlija</a>
-                    <a href="http://www.igrice123.rs/" draggable="true" data-href="http://www.igrice123.rs/" data-name="Igrice123">Igrice123</a>
-                    <a href="http://www.travian.rs/" draggable="true" data-href="http://www.travian.rs/" data-name="Travian">Travian</a>
-                    <a href="http://www.hattrick.org/" draggable="true" data-href="http://www.hattrick.org/" data-name="Hattrick">Hattrick</a>
-                    <a href="http://www.coolinarika.com/" draggable="true" data-href="http://www.coolinarika.com/" data-name="Coolinarika">Coolinarika</a>
-                    <a href="http://www.deviantart.com/" draggable="true" data-href="http://www.deviantart.com/" data-name="DeviantART">DeviantART</a>
-                    <a href="http://www.livescore.com/" draggable="true" data-href="http://www.livescore.com/" data-name="Live Score">Live Score</a>
-          </div>
-        </section>
-        <section class="category" id="category-filmovi-i-muzika" data-category-name="Multimedija">
-          <header class="category-header">
-            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Multimedija <span class="count" data-count></span></h2>
-            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
-          </header>
-          <div class="links">
-                    <a href="http://www.imdb.com/" draggable="true" data-href="http://www.imdb.com/" data-name="IMDB">IMDB</a>
-                    <a href="https://yts.bz/" draggable="true" data-href="https://yts.bz/" data-name="Yify filmovi">Yify filmovi</a>
-                    <a href="http://www.vojvodinanet.com/" draggable="true" data-href="http://www.vojvodinanet.com/" data-name="VojvodinaNET">VojvodinaNET</a>
-                    <a href="http://documentaryheaven.com/" draggable="true" data-href="http://documentaryheaven.com/" data-name="Documentary Heaven">Documentary Heaven</a>
-                    <a href="https://titlovi.com/" draggable="true" data-href="https://titlovi.com/" data-name="DivX Titlovi">DivX Titlovi</a>
-                    <a href="https://www.prijevodi-online.org/" draggable="true" data-href="https://www.prijevodi-online.org/" data-name="Prijevodi">Prijevodi</a>
-                    <a href="https://music.youtube.com/" draggable="true" data-href="https://music.youtube.com/" data-name="YouTube Music">YouTube Music</a>
-                    <a href="http://www.accuradio.com/" draggable="true" data-href="http://www.accuradio.com/" data-name="AccuRadio">AccuRadio</a>
-                    <a href="http://www.radiofm.rs/" draggable="true" data-href="http://www.radiofm.rs/" data-name="Radio stanice Srbije">Radio stanice Srbije</a>
-                    <a href="http://radio.garden/" draggable="true" data-href="http://radio.garden/" data-name="Radio Garden">Radio Garden</a>
-                    <a href="https://rtsplaneta.rs/" draggable="true" data-href="https://rtsplaneta.rs/" data-name="RTS Planeta">RTS Planeta</a>
-                    <a href="http://rockradio.rs/" draggable="true" data-href="http://rockradio.rs/" data-name="Rock Radio Beograd">Rock Radio Beograd</a>
+                    <a href="http://www.facebook.com/" draggable="true" data-href="http://www.facebook.com/" data-name="Facebook">Facebook</a>
+                    <a href="http://twitter.com/" draggable="true" data-href="http://twitter.com/" data-name="Twitter">Twitter</a>
+                    <a href="https://www.linkedin.com/" draggable="true" data-href="https://www.linkedin.com/" data-name="LinkedIn">LinkedIn</a>
+                    <a href="http://instagram.com/" draggable="true" data-href="http://instagram.com/" data-name="Instagram">Instagram</a>
+                    <a href="https://www.pinterest.com/" draggable="true" data-href="https://www.pinterest.com/" data-name="Pinterest">Pinterest</a>
+                    <a href="https://www.tumblr.com/" draggable="true" data-href="https://www.tumblr.com/" data-name="Tumblr">Tumblr</a>
+                    <a href="http://www.reddit.com/" draggable="true" data-href="http://www.reddit.com/" data-name="Reddit">Reddit</a>
+                    <a href="http://www.last.fm/" draggable="true" data-href="http://www.last.fm/" data-name="Last.fm">Last.fm</a>
           </div>
         </section>
         <section class="category" id="category-mediji" data-category-name="Mediji">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Mediji <span class="count" data-count></span></h2>
+            <h2><span class="category-icon">📰</span> Mediji <span class="subtitle">Nezavisni i slobodni mediji</span> <span class="count" data-count></span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
           </header>
           <div class="links">
                     <a href="https://rs.n1info.com/" draggable="true" data-href="https://rs.n1info.com/" data-name="N1info">N1info</a>
                     <a href="http://www.danas.rs/" draggable="true" data-href="http://www.danas.rs/" data-name="Danas">Danas</a>
-                    <a href="https://www.euronews.rs/" draggable="true" data-href="https://www.euronews.rs/" data-name="Euronews.rs">Euronews.rs</a>
-                    <a href="http://www.politika.rs/" draggable="true" data-href="http://www.politika.rs/" data-name="Politika">Politika</a>
                     <a href="https://forbes.n1info.rs/" draggable="true" data-href="https://forbes.n1info.rs/" data-name="Forbes">Forbes</a>
                     <a href="https://radar.nova.rs/" draggable="true" data-href="https://radar.nova.rs/" data-name="Radar">Radar</a>
                     <a href="http://insajder.net/" draggable="true" data-href="http://insajder.net/" data-name="Insajder">Insajder</a>
                     <a href="https://www.raskrikavanje.rs/" draggable="true" data-href="https://www.raskrikavanje.rs/" data-name="Raskrikavanje">Raskrikavanje</a>
                     <a href="http://www.dw.com/sr/" draggable="true" data-href="http://www.dw.com/sr/" data-name="DW">DW</a>
                     <a href="https://www.bbc.com/serbian/lat" draggable="true" data-href="https://www.bbc.com/serbian/lat" data-name="BBC srpski">BBC srpski</a>
-                    <a href="https://www.rt.com/" draggable="true" data-href="https://www.rt.com/" data-name="RT">RT</a>
                     <a href="http://www.slobodnaevropa.org/" draggable="true" data-href="http://www.slobodnaevropa.org/" data-name="Radio Slobodna Evropa">Radio Slobodna Evropa</a>
                     <a href="https://vreme.com/" draggable="true" data-href="https://vreme.com/" data-name="Vreme">Vreme</a>
                     <a href="https://www.nedeljnik.rs" draggable="true" data-href="https://www.nedeljnik.rs" data-name="Nedeljnik">Nedeljnik</a>
@@ -248,10 +174,13 @@
         <section class="category" id="category-portali" data-category-name="Portali">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Portali <span class="count" data-count></span></h2>
+            <h2><span class="category-icon">📰</span> Portali <span class="subtitle">Uključuje tabloidne news portale</span> <span class="count" data-count></span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
           </header>
           <div class="links">
+                    <a href="https://www.euronews.rs/" draggable="true" data-href="https://www.euronews.rs/" data-name="Euronews.rs">Euronews.rs</a>
+                    <a href="http://www.politika.rs/" draggable="true" data-href="http://www.politika.rs/" data-name="Politika">Politika</a>
+                    <a href="https://www.rt.com/" draggable="true" data-href="https://www.rt.com/" data-name="RT">RT</a>
                     <a href="http://www.b92.net/" draggable="true" data-href="http://www.b92.net/" data-name="B92">B92</a>
                     <a href="http://www.blic.rs/" draggable="true" data-href="http://www.blic.rs/" data-name="Blic">Blic</a>
                     <a href="http://www.novosti.rs/" draggable="true" data-href="http://www.novosti.rs/" data-name="Novosti">Novosti</a>
@@ -259,8 +188,6 @@
                     <a href="https://sputnikportal.rs/" draggable="true" data-href="https://sputnikportal.rs/" data-name="Sputnik">Sputnik</a>
                     <a href="http://www.dnevnik.rs/" draggable="true" data-href="http://www.dnevnik.rs/" data-name="Dnevnik">Dnevnik</a>
                     <a href="http://www.mondo.rs/" draggable="true" data-href="http://www.mondo.rs/" data-name="Mondo">Mondo</a>
-                    <a href="http://www.alo.rs/" draggable="true" data-href="http://www.alo.rs/" data-name="Alo">Alo</a>
-                    <a href="https://www.kurir.rs/" draggable="true" data-href="https://www.kurir.rs/" data-name="Kurir">Kurir</a>
                     <a href="https://nova.rs/" draggable="true" data-href="https://nova.rs/" data-name="Nova.rs">Nova.rs</a>
                     <a href="http://www.telegraf.rs/" draggable="true" data-href="http://www.telegraf.rs/" data-name="Telegraf">Telegraf</a>
                     <a href="https://zurnal.politika.rs/" draggable="true" data-href="https://zurnal.politika.rs/" data-name="Žurnal">Žurnal</a>
@@ -273,27 +200,69 @@
                     <a href="http://www.naslovi.net/" draggable="true" data-href="http://www.naslovi.net/" data-name="Naslovi">Naslovi</a>
           </div>
         </section>
-        <section class="category" id="category-drustvene-mreze" data-category-name="Društvene mreže">
+        <section class="category" id="category-globalni-servisi" data-category-name="Globalni servisi">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Društvene mreže <span class="count" data-count></span></h2>
+            <h2><span class="category-icon">🌐</span> Globalni servisi <span class="count" data-count></span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
           </header>
           <div class="links">
-                    <a href="http://www.facebook.com/" draggable="true" data-href="http://www.facebook.com/" data-name="Facebook">Facebook</a>
-                    <a href="http://twitter.com/" draggable="true" data-href="http://twitter.com/" data-name="Twitter">Twitter</a>
-                    <a href="https://www.linkedin.com/" draggable="true" data-href="https://www.linkedin.com/" data-name="LinkedIn">LinkedIn</a>
-                    <a href="http://instagram.com/" draggable="true" data-href="http://instagram.com/" data-name="Instagram">Instagram</a>
-                    <a href="https://www.pinterest.com/" draggable="true" data-href="https://www.pinterest.com/" data-name="Pinterest">Pinterest</a>
-                    <a href="https://www.tumblr.com/" draggable="true" data-href="https://www.tumblr.com/" data-name="Tumblr">Tumblr</a>
-                    <a href="http://www.reddit.com/" draggable="true" data-href="http://www.reddit.com/" data-name="Reddit">Reddit</a>
-                    <a href="http://www.last.fm/" draggable="true" data-href="http://www.last.fm/" data-name="Last.fm">Last.fm</a>
+                    <a href="https://pixabay.com/" draggable="true" data-href="https://pixabay.com/" data-name="Pixabay">Pixabay</a>
+                    <a href="https://www.aliexpress.com/" draggable="true" data-href="https://www.aliexpress.com/" data-name="AliExpress">AliExpress</a>
+                    <a href="http://www.ebay.com/" draggable="true" data-href="http://www.ebay.com/" data-name="eBay">eBay</a>
+                    <a href="http://www.amazon.com/" draggable="true" data-href="http://www.amazon.com/" data-name="Amazon">Amazon</a>
+                    <a href="https://feedly.com/" draggable="true" data-href="https://feedly.com/" data-name="Feedly">Feedly</a>
+                    <a href="http://www.blogger.com/" draggable="true" data-href="http://www.blogger.com/" data-name="Blogger">Blogger</a>
+                    <a href="https://imgur.com/" draggable="true" data-href="https://imgur.com/" data-name="Imgur">Imgur</a>
+                    <a href="http://thepiratebay.org/" draggable="true" data-href="http://thepiratebay.org/" data-name="ThePirateBay">ThePirateBay</a>
+                    <a href="http://translate.google.com/" draggable="true" data-href="http://translate.google.com/" data-name="Translate">Translate</a>
+                    <a href="https://maps.google.com/" draggable="true" data-href="https://maps.google.com/" data-name="Google Maps">Google Maps</a>
+                    <a href="https://photos.google.com/" draggable="true" data-href="https://photos.google.com/" data-name="Google Photos">Google Photos</a>
+                    <a href="http://www.livescore.com/" draggable="true" data-href="http://www.livescore.com/" data-name="Live Score">Live Score</a>
+          </div>
+        </section>
+        <section class="category" id="category-domaci-servisi" data-category-name="Domaći servisi">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2><span class="category-icon">🇷🇸</span> Domaći servisi <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
+                    <a href="https://moj.esdnevnik.rs/login" draggable="true" data-href="https://moj.esdnevnik.rs/login" data-name="moj esDnevnik">moj esDnevnik</a>
+                    <a href="https://11811.rs/" draggable="true" data-href="https://11811.rs/" data-name="Bele strane">Bele strane</a>
+                    <a href="http://www.infostud.com/" draggable="true" data-href="http://www.infostud.com/" data-name="Infostud">Infostud</a>
+                    <a href="https://euprava.gov.rs/" draggable="true" data-href="https://euprava.gov.rs/" data-name="eUprava">eUprava</a>
+                    <a href="http://www.apr.gov.rs/" draggable="true" data-href="http://www.apr.gov.rs/" data-name="APR">APR</a>
+                    <a href="http://www.weather2umbrella.com/" draggable="true" data-href="http://www.weather2umbrella.com/" data-name="Weather2Umbrella">Weather2Umbrella</a>
+                    <a href="https://eon.tv/" draggable="true" data-href="https://eon.tv/" data-name="EON">EON</a>
+          </div>
+        </section>
+        <section class="category" id="category-filmovi-i-muzika" data-category-name="Multimedija">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2><span class="category-icon">🎬</span> Multimedija <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
+                    <a href="http://www.youtube.com/" draggable="true" data-href="http://www.youtube.com/" data-name="YouTube">YouTube</a>
+                    <a href="http://www.imdb.com/" draggable="true" data-href="http://www.imdb.com/" data-name="IMDB">IMDB</a>
+                    <a href="https://yts.bz/" draggable="true" data-href="https://yts.bz/" data-name="Yify filmovi">Yify filmovi</a>
+                    <a href="http://www.vojvodinanet.com/" draggable="true" data-href="http://www.vojvodinanet.com/" data-name="VojvodinaNET">VojvodinaNET</a>
+                    <a href="http://documentaryheaven.com/" draggable="true" data-href="http://documentaryheaven.com/" data-name="Documentary Heaven">Documentary Heaven</a>
+                    <a href="https://titlovi.com/" draggable="true" data-href="https://titlovi.com/" data-name="DivX Titlovi">DivX Titlovi</a>
+                    <a href="https://www.prijevodi-online.org/" draggable="true" data-href="https://www.prijevodi-online.org/" data-name="Prijevodi">Prijevodi</a>
+                    <a href="https://music.youtube.com/" draggable="true" data-href="https://music.youtube.com/" data-name="YouTube Music">YouTube Music</a>
+                    <a href="http://www.accuradio.com/" draggable="true" data-href="http://www.accuradio.com/" data-name="AccuRadio">AccuRadio</a>
+                    <a href="http://www.radiofm.rs/" draggable="true" data-href="http://www.radiofm.rs/" data-name="Radio stanice Srbije">Radio stanice Srbije</a>
+                    <a href="http://radio.garden/" draggable="true" data-href="http://radio.garden/" data-name="Radio Garden">Radio Garden</a>
+                    <a href="https://rtsplaneta.rs/" draggable="true" data-href="https://rtsplaneta.rs/" data-name="RTS Planeta">RTS Planeta</a>
+                    <a href="http://rockradio.rs/" draggable="true" data-href="http://rockradio.rs/" data-name="Rock Radio Beograd">Rock Radio Beograd</a>
           </div>
         </section>
         <section class="category" id="category-razno" data-category-name="Razno">
           <header class="category-header">
             <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
-            <h2>Razno <span class="count" data-count></span></h2>
+            <h2><span class="category-icon">📦</span> Razno <span class="count" data-count></span></h2>
             <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
           </header>
           <div class="links">
@@ -309,6 +278,38 @@
                     <a href="http://forum.burek.com/" draggable="true" data-href="http://forum.burek.com/" data-name="Burek">Burek</a>
                     <a href="http://www.elitesecurity.org/" draggable="true" data-href="http://www.elitesecurity.org/" data-name="EliteSecurity">EliteSecurity</a>
                     <a href="http://www.yuportal.com/" draggable="true" data-href="http://www.yuportal.com/" data-name="YuPortal">YuPortal</a>
+          </div>
+        </section>
+        <section class="category" id="category-zabava" data-category-name="Zabava">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2><span class="category-icon">🎮</span> Zabava <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
+                    <a href="http://www.njuz.net/" draggable="true" data-href="http://www.njuz.net/" data-name="Njuz">Njuz</a>
+                    <a href="http://ispovesti.com/" draggable="true" data-href="http://ispovesti.com/" data-name="Ispovesti">Ispovesti</a>
+                    <a href="http://vukajlija.com/" draggable="true" data-href="http://vukajlija.com/" data-name="Vukajlija">Vukajlija</a>
+                    <a href="http://www.igrice123.rs/" draggable="true" data-href="http://www.igrice123.rs/" data-name="Igrice123">Igrice123</a>
+                    <a href="http://www.travian.rs/" draggable="true" data-href="http://www.travian.rs/" data-name="Travian">Travian</a>
+                    <a href="http://www.hattrick.org/" draggable="true" data-href="http://www.hattrick.org/" data-name="Hattrick">Hattrick</a>
+                    <a href="http://www.coolinarika.com/" draggable="true" data-href="http://www.coolinarika.com/" data-name="Coolinarika">Coolinarika</a>
+                    <a href="http://www.deviantart.com/" draggable="true" data-href="http://www.deviantart.com/" data-name="DeviantART">DeviantART</a>
+          </div>
+        </section>
+        <section class="category" id="category-alati-i-produktivnost" data-category-name="Alati i produktivnost">
+          <header class="category-header">
+            <button type="button" class="drag-handle" aria-label="Prevuci kategoriju" title="Prevuci za promenu redosleda">⋮⋮</button>
+            <h2><span class="category-icon">🛠️</span> Alati i produktivnost <span class="count" data-count></span></h2>
+            <button type="button" class="visibility-toggle" aria-label="Sakrij kategoriju" title="Sakrij / prikaži kategoriju" data-visibility-toggle>👁</button>
+          </header>
+          <div class="links">
+                    <a href="http://translate.google.com/" draggable="true" data-href="http://translate.google.com/" data-name="Translate">Translate</a>
+                    <a href="https://www.google.com/drive/" draggable="true" data-href="https://www.google.com/drive/" data-name="Drive">Drive</a>
+                    <a href="https://www.dropbox.com/" draggable="true" data-href="https://www.dropbox.com/" data-name="Dropbox">Dropbox</a>
+                    <a href="https://maps.google.com/" draggable="true" data-href="https://maps.google.com/" data-name="Google Maps">Google Maps</a>
+                    <a href="https://photos.google.com/" draggable="true" data-href="https://photos.google.com/" data-name="Google Photos">Google Photos</a>
+                    <a href="http://www.filehippo.com/" draggable="true" data-href="http://www.filehippo.com/" data-name="FileHippo">FileHippo</a>
           </div>
         </section>
     </main>
@@ -874,19 +875,29 @@
       }
       function renderCustom() {
         var items = loadCustom();
-        if (items.length === 0) {
-          // Remove the section entirely
-          if (customSection && customSection.parentNode) {
-            customSection.parentNode.removeChild(customSection);
-          }
-          if (customSortable) { customSortable.destroy(); customSortable = null; }
-          customSection = null; customZone = null;
-          return;
-        }
         ensureCustomSection();
-        // Re-render links
+        // Uvek prikaži sekciju (čak i kada je prazna) — funkcionalnost sakrivanja je na 👁 dugmetu
+        // Ukloni sve <a.fav-item> linkove da bi re-renderovao
         Array.prototype.slice.call(customZone.querySelectorAll('a.fav-item')).forEach(function (a) { a.remove(); });
-        items.forEach(function (f) { customZone.appendChild(createFavNode(f.href, f.name)); });
+        if (items.length === 0) {
+          // Prikaži "prazno" poruku
+          var empty = customZone.querySelector('[data-empty]');
+          if (!empty) {
+            empty = document.createElement('p');
+            empty.className = 'empty-message';
+            empty.setAttribute('data-empty', '');
+            empty.textContent = 'Dodaj link dugmetom "Dodaj link" iznad';
+            customZone.appendChild(empty);
+          } else {
+            empty.hidden = false;
+          }
+        } else {
+          // Sakrij "prazno" poruku ako postoji
+          var empty = customZone.querySelector('[data-empty]');
+          if (empty) empty.hidden = true;
+          // Dodaj linkove
+          items.forEach(function (f) { customZone.appendChild(createFavNode(f.href, f.name)); });
+        }
         // Update count
         var countEl = customSection.querySelector('[data-count]');
         if (countEl) countEl.textContent = '(' + items.length + ')';

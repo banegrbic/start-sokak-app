@@ -464,6 +464,34 @@ body {
   margin-left: 6px;
 }
 
+/* Ikona kategorije levo od naslova */
+.category-header h2 .category-icon {
+  display: inline-block;
+  font-size: 18px;
+  margin-right: 6px;
+  vertical-align: -2px;
+}
+
+/* Subtitle (manji tekst pored naslova, npr. "Nezavisni i slobodni mediji") */
+.category-header h2 .subtitle {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 8px;
+  font-style: italic;
+  vertical-align: middle;
+}
+
+@media (max-width: 600px) {
+  .category-header h2 .subtitle {
+    display: block;
+    margin-left: 24px; /* offset for emoji */
+    margin-top: 2px;
+    font-size: 10px;
+  }
+}
+
 .drag-handle,
 .visibility-toggle {
   background: transparent;
@@ -649,10 +677,25 @@ body {
     grid-template-columns: 1fr 1fr;
     /* align-items: stretch (default) — kartice iste visine u redu */
     gap: 20px 40px; /* row 20px, column 40px */
+    padding-bottom: 40px; /* prostor ispod poslednjeg reda */
   }
   #categoriesContainer > .category {
     box-sizing: border-box;
     min-width: 0; /* dozvoli grid da skraci kartice */
+  }
+}
+
+/* Mobilni i tablet: 1 kolona, vertikalni gap + padding ispod */
+@media (max-width: 899px) {
+  #categoriesContainer {
+    display: block;
+    padding-bottom: 40px;
+  }
+  #categoriesContainer > .category {
+    margin-bottom: 18px;
+  }
+  #categoriesContainer > .category:last-child {
+    margin-bottom: 0;
   }
 }
 
