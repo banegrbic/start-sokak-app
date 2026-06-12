@@ -44,6 +44,17 @@
 - **Lažno pozitivni** (Cloudflare/anti-bot): rockradio.rs, halooglasi.com, hattrick.org, polovniautomobili.com, istinomer.rs, chat.openai.com, pixabay.com, twitter.com, filehippo.com, brave.com — svi provereni u browser-u, aktivni su.
 - **Svaštara ostavljena** — korisnik potvrdio da radi (ja ne vidim zbog Cloudflare zaštite, korisnik vidi normalno).
 
+### Restruktuiranje kategorija (12.6.2026)
+
+- **"Filmovi i muzika" → "Multimedija"** (preimenovana, isti linkovi).
+- **"Alati i produktivnost" — NOVA** (6 linkova: Translate, Drive, Dropbox, Google Maps, Google Photos, FileHippo).
+- **"Globalni servisi" smanjen** sa 14 na 8 (Translate, Drive, Dropbox, Maps, Photos, FileHippo su prešli u Alati).
+- **"Pretraga i pošta" proširena** sa 11 na 13 (dodati Perplexity i Claude, ChatGPT URL fiksiran na chatgpt.com).
+- **"Kula / Vrbas" IZBAČENA** — projekat je usmeren na sve korisnike u Srbiji.
+- **Redosled**: Moji linkovi → Pretraga i pošta → Globalni → Domaći → Alati → Zabava → Multimedija → Mediji → Portali → Društvene mreže → Razno.
+- **Pravilo za buduće izmene**: Ako isti link postoji u 2 kategorije, "Pretraga i pošta" ima prioritet za čuvanje.
+- **Dodatno za sledeći put**: Mediji/Portali split + Zabava cleanup + Društvene mreže dopuna.
+
 ### Planirano (kad korisnik bude hteo)
 
 - **Email format/template** — trenutno plain HTML sa tabelom, može lepši branded template.
