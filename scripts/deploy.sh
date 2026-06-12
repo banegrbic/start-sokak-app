@@ -70,8 +70,8 @@ echo
 echo "→ curl verifikacija live URL-a"
 # Sačekaj 1s da server opsluži nov fajl
 sleep 1
-# Izvuci novu verziju iz lokalnog fajla
-NEW_V=$(grep -oE '\?v=[0-9a-z]+' "$PROJECT_DIR/index.html" | head -1)
+# Izvuci novu verziju iz lokalnog fajla (samo za responsive.css, NE apple-touch-icon)
+NEW_V=$(grep -oE 'responsive\.css\?v=[0-9a-z]+' "$PROJECT_DIR/index.html" | head -1 | sed 's/responsive\.css//')
 echo "  očekivana verzija: $NEW_V"
 echo
 
@@ -81,20 +81,21 @@ echo "  Server response:"
 echo "$SERVER_HEADERS" | head -5
 echo
 
-# Proveri da HTML koji server vraća sadrži novu verziju
+# Proveri da HTML koji server vraća sadrži novu verziju (samo responsive.css)
 SERVER_HTML=$(curl -sS "$LIVE_URL" 2>&1 || echo "GREŠKA")
-if echo "$SERVER_HTML" | grep -q "$NEW_V"; then
-  echo "  ✓ Server vraća HTML sa novom verzijom $NEW_V"
+SERVER_CSS_V=$(echo "$SERVER_HTML" | grep -oE 'responsive\.css\?v=[0-9a-z]+' | head -1 | sed 's/responsive\.css//' || echo "")
+if [ -n "$SERVER_CSS_V" ] && [ "$SERVER_CSS_V" = "$NEW_V" ]; then
+  echo "  ✓ Server vraća HTML sa novom verzijom$NEW_V"
 else
   echo "  ⚠ Server NE vraća novu verziju (možda CDN/proxy keš)"
-  echo "    Očekivano u HTML-u: $NEW_V"
-  echo "    Stvarno sadržano: $(echo "$SERVER_HTML" | grep -oE 'responsive\.css\?v=[0-9a-z]+' | head -1)"
+  echo "    Očekivano u HTML-u:$NEW_V"
+  echo "    Stvarno sadržano:   $SERVER_CSS_V"
 fi
 echo
 
 echo "✓ Deploy završen"
 echo "  Live URL: $LIVE_URL"
-echo "  Verzija:  $NEW_V"
+echo "  Verzija:$NEW_V"
 echo
 echo "  Napomena: korisnik treba da uradi hard refresh (Ctrl+Shift+R)"
 echo "  ili doda ?v=N na kraj URL-a da bi browser učitao novu verziju."
