@@ -46,14 +46,33 @@
 
 ### Restruktuiranje kategorija (12.6.2026)
 
-- **"Filmovi i muzika" → "Multimedija"** (preimenovana, isti linkovi).
-- **"Alati i produktivnost" — NOVA** (6 linkova: Translate, Drive, Dropbox, Google Maps, Google Photos, FileHippo).
-- **"Globalni servisi" smanjen** sa 14 na 8 (Translate, Drive, Dropbox, Maps, Photos, FileHippo su prešli u Alati).
-- **"Pretraga i pošta" proširena** sa 11 na 13 (dodati Perplexity i Claude, ChatGPT URL fiksiran na chatgpt.com).
-- **"Kula / Vrbas" IZBAČENA** — projekat je usmeren na sve korisnike u Srbiji.
-- **Redosled**: Moji linkovi → Pretraga i pošta → Globalni → Domaći → Alati → Zabava → Multimedija → Mediji → Portali → Društvene mreže → Razno.
-- **Pravilo za buduće izmene**: Ako isti link postoji u 2 kategorije, "Pretraga i pošta" ima prioritet za čuvanje.
-- **Dodatno za sledeći put**: Mediji/Portali split + Zabava cleanup + Društvene mreže dopuna.
+**Verzija 1 (isto jutro):**
+- "Filmovi i muzika" → "Multimedija" (preimenovana, isti linkovi).
+- "Alati i produktivnost" — NOVA (6 linkova: Translate, Drive, Dropbox, Google Maps, Google Photos, FileHippo).
+- "Globalni servisi" smanjen sa 14 na 8 (Translate, Drive, Dropbox, Maps, Photos, FileHippo su prešli u Alati).
+- "Pretraga i pošta" proširena sa 11 na 13 (dodati Perplexity i Claude, ChatGPT URL fiksiran na chatgpt.com).
+- "Kula / Vrbas" IZBAČENA — projekat je usmeren na sve korisnike u Srbiji.
+- Pravilo za buduće izmene: Ako isti link postoji u 2 kategorije, "Pretraga i pošta" ima prioritet za čuvanje.
+
+**Verzija 2 (12.6.2026, kasnije):**
+- **10 kategorija** + Custom linkovi (uvek vidljiv) + Moji linkovi
+- **Raspored u parovima** (2-kolonski grid desktop, 1-kolona mobilni):
+  - Par 1: Moji linkovi (★) | Custom linkovi (＋) — prazan ali vidljiv
+  - Par 2: Pretraga, pošta, AI (🔍) | Društvene mreže (👥)
+  - Par 3: Mediji (📰) | Portali (📰)
+  - Par 4: Globalni servisi (🌐) | Domaći servisi (🇷🇸)
+  - Par 5: Multimedija (🎬) | Razno (📦)
+  - Par 6: Zabava (🎮) | Alati i produktivnost (🛠️)
+- **Emoji ikone** (Unicode) levo od svakog naslova
+- **Subtitle** italic manji tekst: "Nezavisni i slobodni mediji" (Mediji), "Uključuje tabloidne news portale" (Portali) — na mobilnom display:block ispod
+- **CSS padding** ispod poslednjeg reda (40px), 18px razmak između kartica
+- **YouTube** premešten iz Pretraga u Multimedija
+- **Euronews.rs, Politika, RT** premešteni iz Mediji u Portali
+- **Alo, Kurir** izbačeni iz Portala
+- **Live Score** premešten iz Zabava u Globalni servisi
+- **Translate, Google Maps, Google Photos** premešteni iz Alati u Globalni servisi
+- **renderCustom()** refaktorisana: sekcija se NE briše kada je prazna, samo prikazuje "Dodaj link dugmetom 'Dodaj link' iznad"
+- **Commit:** `311b678` (2 files, 166 ins, 112 del)
 
 ### Planirano (kad korisnik bude hteo)
 
