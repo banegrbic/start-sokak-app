@@ -1,6 +1,6 @@
 <?php
 /**
- * KulaWireless — Suggest Link API
+ * start.sokak.app — Suggest Link API
  *
  * Prima JSON POST { url, name, description, email, _hp, _ts } sa index.html,
  * validira, salje email na bane.grbic@gmail.com i loguje u suggestions.log.
@@ -16,16 +16,16 @@
  *   - Email opciona, ako postoji mora biti validan
  *   - Output je uvek JSON, nikad HTML
  *
- * Fajl je 1:1 mapiran na cPanel `~/tata.lukasplayroom.com/public/KulaWireless/api/suggest.php`.
+ * Fajl je 1:1 mapiran na cPanel `~/start.sokak.app/api/suggest.php`.
  * NE stavljati u /public_html/ root jer bi bio pristupacan na celom sajtu.
  */
 
 // ===== CONFIG =====
 $TO_EMAIL    = 'bane.grbic@gmail.com';
 $FROM_EMAIL  = 'noreply@lukasplayroom.com';
-$FROM_NAME   = 'KulaWireless';
-$SUBJECT     = '[KulaWireless] Novi predlog linka';
-$LOG_FILE    = '/tmp/kulawireless-suggestions.log';
+$FROM_NAME   = 'start.sokak.app';
+$SUBJECT     = '[start.sokak.app] Novi predlog linka';
+$LOG_FILE    = '/tmp/start-sokak-app-suggestions.log';
 $MIN_SUBMIT_SECONDS = 2; // Anti-spam: ljudi treba bar 2s da popune formu
 $MAX_URL_LEN  = 500;
 $MAX_NAME_LEN = 80;
@@ -67,7 +67,7 @@ if (!is_array($data)) {
 $honeypot = isset($data['_hp']) ? trim((string)$data['_hp']) : '';
 if ($honeypot !== '') {
     // Tiho "ok" vracamo botu da misli da je prosao, ali ne saljemo mejl
-    error_log('[KulaWireless suggest] Honeypot triggered from IP ' . ($_SERVER['REMOTE_ADDR'] ?? '?'));
+    error_log('[start.sokak.app suggest] Honeypot triggered from IP ' . ($_SERVER['REMOTE_ADDR'] ?? '?'));
     respond_ok();
 }
 
@@ -76,7 +76,7 @@ $ts = isset($data['_ts']) ? (int)$data['_ts'] : 0;
 if ($ts > 0) {
     $elapsed = time() - $ts;
     if ($elapsed >= 0 && $elapsed < $MIN_SUBMIT_SECONDS) {
-        error_log('[KulaWireless suggest] Timing fail (' . $elapsed . 's) from IP ' . ($_SERVER['REMOTE_ADDR'] ?? '?'));
+        error_log('[start.sokak.app suggest] Timing fail (' . $elapsed . 's) from IP ' . ($_SERVER['REMOTE_ADDR'] ?? '?'));
         respond_ok(); // tiho, kao da je ok
     }
 }
@@ -143,7 +143,7 @@ $body_html = <<<HTML
 <html lang="sr">
 <head><meta charset="UTF-8"></head>
 <body style="font-family: -apple-system, system-ui, sans-serif; color: #222; max-width: 600px;">
-<h2 style="color: #4a90e2; margin-top: 0;">Novi predlog linka — KulaWireless</h2>
+<h2 style="color: #4a90e2; margin-top: 0;">Novi predlog linka — start.sokak.app</h2>
 
 <table cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
   <tr><td style="background:#f5f5f5; font-weight:600; width:100px;">URL</td>
@@ -167,7 +167,7 @@ $body_html = <<<HTML
 HTML;
 
 // Plain-text verzija (za email klijente koji ne prikazuju HTML)
-$body_text = "Novi predlog linka — KulaWireless\n\n"
+$body_text = "Novi predlog linka — start.sokak.app\n\n"
            . "URL: $url\n"
            . "Naziv: " . ($name ?: '(prazno)') . "\n"
            . "Opis: " . ($description ?: '(prazno)') . "\n"
@@ -183,7 +183,7 @@ $headers  = "From: $FROM_NAME <$FROM_EMAIL>\r\n";
 $headers .= "Reply-To: " . ($email ?: $FROM_EMAIL) . "\r\n";
 $headers .= "MIME-Version: 1.0\r\n";
 $headers .= "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n";
-$headers .= "X-Mailer: KulaWireless/1.0\r\n";
+$headers .= "X-Mailer: start.sokak.app/1.0\r\n";
 
 // multipart/alternative body
 $body_full = "--$boundary\r\n";
@@ -197,7 +197,7 @@ $body_full .= "--$boundary--\r\n";
 // ===== 12. POSALJI MEJL =====
 $sent = @mail($TO_EMAIL, $SUBJECT, $body_full, $headers);
 if (!$sent) {
-    error_log("[KulaWireless suggest] mail() FAILED for URL=$url");
+    error_log("[start.sokak.app suggest] mail() FAILED for URL=$url");
     respond_error('Slanje mejla nije uspelo. Pokusajte ponovo.', 500);
 }
 
