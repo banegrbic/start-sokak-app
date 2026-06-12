@@ -81,6 +81,15 @@
 - **Rezultat**: Custom linkovi se ponašaju isto kao i druge kategorije — 👁 sakriva, "Prikaži sve" vraća, refresh pamti.
 - **Commit:** `830eb6a` (1 file, 10 ins)
 
+### Mobilni hamburger meni (12.6.2026)
+
+- **Na mobilnom/tabletu (<900px)**: 4 opcije (Dodaj link, Predloži link, Prikaži sve, Obriši Moje) sakrivene iza ☰ hamburger dugmeta. Search polje i dark/light mode ostaju vidljivi.
+- **CSS klase**: `.desktop-only` sakriven na <900px, `.mobile-only` prikazan na <900px, `.hamburger-btn` prikazan na <900px.
+- **Akcije menija**: zatvori meni, pa pozovi `openAddCustom()` / `openSuggest()` / `showAllBtn.click()` / `resetFavorites.click()`.
+- **Zatvaranje**: klik na ☰ (toggle), klik van menija, ili akcija.
+- **Verifikacija**: desktop sakriven hamburger (display:none), mobilni vidi ☰; testirano open/close, akcija "Dodaj link" otvara modal.
+- **Commit:** `90eaf26` (2 files, 210 ins, 10 del)
+
 ### Planirano (kad korisnik bude hteo)
 
 - **Email format/template** — trenutno plain HTML sa tabelom, može lepši branded template.
