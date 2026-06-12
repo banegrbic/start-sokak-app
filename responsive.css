@@ -89,15 +89,13 @@ body {
 }
 
 .main-container {
-  margin-top: 24px;
+  margin: 24px auto 0; /* centrirano kao i toolbar */
   padding-left: 80px;
   padding-right: 80px;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 /* ============= TOOLBAR (search + reset) ============= */
