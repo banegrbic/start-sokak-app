@@ -21,6 +21,27 @@
 - Fix: dodat `onMove` callback koji vraća `false` ako je tap na `<a>` element. Sortable ne ulazi u drag mode za tap.
 - Status: KORISNIK POTVRDIO DA RADI (8.6.2026).
 
+### ~~Pinterest layout — nije savršen~~ PRIHVAĆENO KAO WORKAROUND (12.6.2026)
+
+- Korisnik kaže "radi dobro, vizuelno uredno, ostavi za sada" — preskoči.
+- Status: KORISNIK PRIHVATIO.
+
+### Novi feature: "Predloži link" dugme (12.6.2026)
+
+- Dugme u toolbar-u pored "Dodaj link" (žuta boja da se razlikuje).
+- Modal sa formom: URL (obavezno), Naziv, Opis, Email (opciono).
+- PHP backend `api/suggest.php` šalje email na `bane.grbic@gmail.com` (preko cPanel mail()).
+- Anti-spam: honeypot polje + timing provera (2s minimum).
+- Log: `/tmp/kulawireless-suggestions.log` (van public_html, world-writable).
+- Validacija: URL mora biti http/https sa validnim hostom, SSRF zaštita (blokira localhost/private IP).
+- Browser submit testiran end-to-end (12.6.2026), log potvrđen.
+
+### Planirano (kad korisnik bude hteo)
+
+- **Email format/template** — trenutno plain HTML sa tabelom, može lepši branded template.
+- **Notifikacija korisniku** — posle uspešnog submita prikaže "Hvala, predlog je poslat" (već radi kao toast).
+- **Rate limiting** — trenutno samo timing + honeypot. Ako bude spam problema, dodati IP-based rate limit (npr. 5 submita/sat/IP).
+
 ---
 
 ## Napomene
