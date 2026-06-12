@@ -278,6 +278,79 @@ body {
   border-color: var(--link-hover);
 }
 
+/* Suggest modal: textarea + hint + suggest-btn razlikovanje */
+.modal-box .custom-link-form textarea {
+  width: 100%;
+  min-height: 70px;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  resize: vertical;
+  box-sizing: border-box;
+}
+.modal-box .custom-link-form textarea:focus {
+  outline: none;
+  border-color: var(--link-color);
+  box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+}
+.modal-hint {
+  margin: -4px 0 12px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.suggest-btn {
+  background-color: #f59f00 !important; /* zuta/oranz - razlikuje se od "Dodaj link" */
+  border-color: #f59f00 !important;
+  color: #1a1a1a !important;
+}
+.suggest-btn:hover {
+  background-color: #fab005 !important;
+  border-color: #fab005 !important;
+}
+
+/* ============= TOAST ============= */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%) translateY(20px);
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--link-color);
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 5000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  max-width: calc(100% - 40px);
+  text-align: center;
+}
+.toast[hidden] { display: none; }
+.toast.toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast.toast-success {
+  border-left-color: #51cf66;
+  color: #d3f9d8;
+}
+.toast.toast-error {
+  border-left-color: #ff6b6b;
+  color: #ffe0e0;
+}
+:root[data-theme="light"] .toast.toast-success { color: #2b8a3e; }
+:root[data-theme="light"] .toast.toast-error { color: #c92a2a; }
+
 /* ============= FILTER HIDDEN ============= */
 .links a.hidden { display: none !important; }
 .category.hidden-category { display: none !important; }

@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABF0lEQVR4nKRTP0/CQBz9/Q4JOqjRD1AZHY270bHqbOLg4uRqE3frJ6j6CRhgJIEFCGGAhC/BSBMmFgj/FtrHtVBoyQFN+pa+vrv3fne/uxOUEIIS4kglPv4jA6d3S4RMWAe5N3DQr39lC3sD2LGLzPysGJEOJt2y0zVDy+0MOAQZru1dwZTO3o5p9C6AcxAemMV9JACwA65sYtO4GNQ+NWtZLWrexs5TeLK6pnR/rwWgHDtAYf6Raymp5vo90P/sVwHKS5pae8jvuW+uGFem/tt9EUuFXMYkEiBcXMuKqXBy2OzR+clpPT0btwMeCVABcFtVI2sG/42Py6H83Cm3oAITNykGVk3kjndPN+U9LrUYYEqIxK9xAQAA//9t087eAAAABklEQVQDAKJ0V71C0n7OAAAAAElFTkSuQmCC" />
     <link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABcklEQVR4nOyWsUrEQBCG/wliZ3sKcieCD2IZtZQTrC1VSCpr3yCgWMhpa2Gr5Frfw0LvsBMLOwtvnBULL5m4m2xCLPJxRW4yu//P7GSSAC0ToGU6A60bWCiTHCbPQwLtgrFiz+YeiNbl4hPMozRei7QsgiNhMj0IwCNUZAZcjKPBYTbufAQE3oEHsn5fi5c6Ai+YFrWwcwUYdA8PGHjS4s4VGEf9K2nCd3E8ZKZeZvNVImz8jmWbS/6/avs6N2ERW8n0SM73DPOGchsz4yGNB5vZ9V49oImXpbKBOsQNlSahTVzK/YimDFjFQcdy/i9owoCLeBr1z1EC5x5oQjxnIEwmccB8Ki+RJU3i+0fKI1ZRPGdAXjYnuvgPpNlSxAlvytp8DLkeoGVYIJs4CsY24w52A+78VXYztmfgPcm6lcQbcy1T8FrLnSvqdjJheIqXpdIkrEvc0H2U/i8DzHzJ4I+iZHPP5KBGvD9IfOl6oHUDXwAAAP//FTQR/AAAAAZJREFUAwDNWIkycnxQPwAAAABJRU5ErkJggg==" />
     <link rel="apple-touch-icon" href="favicon-64.png?v=2" />
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260608c" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=20260612a" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -50,6 +50,7 @@
         <input type="search" id="searchInput" class="search-input" placeholder="🔍 Filtriraj linkove..." aria-label="Filtriraj linkove" autocomplete="off" />
         <span id="searchCount" class="search-count" aria-live="polite"></span>
         <button type="button" id="addCustomBtn" class="add-custom-btn" title="Dodaj novi custom link">＋ Dodaj link</button>
+        <button type="button" id="suggestLinkBtn" class="add-custom-btn suggest-btn" title="Predloži link za KulaWireless">💡 Predloži link</button>
         <button type="button" id="showAllBtn" class="reset-favorites" title="Prikaži sve sakrivene kategorije">Prikaži sve</button>
         <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje</button>
     </div>
@@ -67,6 +68,29 @@
         </form>
       </div>
     </div>
+
+    <!-- Modal: Suggest a link -->
+    <div id="suggestModal" class="modal-overlay" hidden>
+      <div class="modal-box" role="dialog" aria-labelledby="suggestTitle" aria-modal="true">
+        <h3 id="suggestTitle">💡 Predloži link</h3>
+        <p class="modal-hint">Predloži link koji bi korisno stajao na KulaWireless startnoj stranici.</p>
+        <form id="suggestForm" class="custom-link-form">
+            <input type="text" name="url" placeholder="URL (obavezno, npr. https://primer.rs)" required maxlength="500" autocomplete="off" inputmode="url" />
+            <input type="text" name="name" placeholder="Naziv (opciono)" maxlength="80" autocomplete="off" />
+            <textarea name="description" placeholder="Opis (opciono, 1-2 rečenice zašto je link vredan)" maxlength="500" rows="3" autocomplete="off"></textarea>
+            <input type="email" name="email" placeholder="Tvoj email (opciono, za kontakt ako treba pojašnjenje)" maxlength="120" autocomplete="email" />
+            <!-- Honeypot: botovi popunjavaju, ljudi ne vide (display:none) -->
+            <input type="text" name="_hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true" />
+            <div class="modal-actions">
+              <button type="button" id="suggestCancel" class="modal-cancel">Otkaži</button>
+              <button type="submit" class="modal-submit">📨 Pošalji</button>
+            </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast: notifikacija (success/error) -->
+    <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
     <main class="main-container" id="categoriesContainer">
         <section class="category" id="category-moji-linkovi" data-category-name="Moji linkovi">
           <header class="category-header">
@@ -922,8 +946,132 @@
       }
       // Close on Escape
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && addCustomModal && !addCustomModal.hidden) closeAddCustom();
+        if (e.key === 'Escape') {
+          if (addCustomModal && !addCustomModal.hidden) closeAddCustom();
+          if (suggestModal && !suggestModal.hidden) closeSuggest();
+        }
       });
+
+      // ========== SUGGEST LINK MODAL ==========
+      var suggestModal = document.getElementById('suggestModal');
+      var suggestBtn = document.getElementById('suggestLinkBtn');
+      var suggestCancel = document.getElementById('suggestCancel');
+      var suggestForm = document.getElementById('suggestForm');
+      var toast = document.getElementById('toast');
+      var suggestFormOpenedAt = 0; // za anti-spam timing
+      var toastTimer = null;
+
+      function showToast(message, isError) {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = 'toast' + (isError ? ' toast-error' : ' toast-success');
+        toast.hidden = false;
+        // trigger reflow za animaciju
+        // eslint-disable-next-line no-unused-expressions
+        toast.offsetHeight;
+        toast.classList.add('toast-visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          toast.classList.remove('toast-visible');
+          setTimeout(function () { toast.hidden = true; }, 250);
+        }, isError ? 5000 : 3500);
+      }
+
+      function openSuggest() {
+        if (!suggestModal) return;
+        suggestFormOpenedAt = Date.now();
+        // Resetuj honeypot (makar ga niko ne vidi, cistije je)
+        var hp = suggestForm && suggestForm.querySelector('input[name="_hp"]');
+        if (hp) hp.value = '';
+        suggestModal.hidden = false;
+        // Fokus na prvo polje (URL) posle kratkog delay-a (ne kvari animaciju)
+        setTimeout(function () {
+          var urlInput = suggestForm && suggestForm.querySelector('input[name="url"]');
+          if (urlInput) urlInput.focus();
+        }, 50);
+      }
+
+      function closeSuggest() {
+        if (!suggestModal) return;
+        suggestModal.hidden = true;
+        if (suggestForm) suggestForm.reset();
+        suggestFormOpenedAt = 0;
+      }
+
+      if (suggestBtn) suggestBtn.addEventListener('click', openSuggest);
+      if (suggestCancel) suggestCancel.addEventListener('click', closeSuggest);
+      if (suggestModal) {
+        suggestModal.addEventListener('click', function (e) {
+          if (e.target === suggestModal) closeSuggest();
+        });
+      }
+
+      if (suggestForm) {
+        suggestForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var urlInput = suggestForm.querySelector('input[name="url"]');
+          var nameInput = suggestForm.querySelector('input[name="name"]');
+          var descInput = suggestForm.querySelector('textarea[name="description"]');
+          var emailInput = suggestForm.querySelector('input[name="email"]');
+          var hpInput = suggestForm.querySelector('input[name="_hp"]');
+          var submitBtn = suggestForm.querySelector('button[type="submit"]');
+
+          var url = (urlInput.value || '').trim();
+          var name = (nameInput.value || '').trim();
+          var description = (descInput.value || '').trim();
+          var email = (emailInput.value || '').trim();
+          var hp = (hpInput.value || '').trim();
+
+          if (!url) { showToast('URL je obavezan.', true); return; }
+          if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+          // Disable submit dok traje POST
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Šaljem...';
+          }
+
+          var payload = {
+            url: url,
+            name: name,
+            description: description,
+            email: email,
+            _hp: hp,
+            _ts: Math.floor(suggestFormOpenedAt / 1000)
+          };
+
+          fetch('api/suggest.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              return { ok: res.ok, status: res.status, data: data };
+            }).catch(function () {
+              return { ok: res.ok, status: res.status, data: { ok: false, error: 'Nevalidan odgovor servera.' } };
+            });
+          })
+          .then(function (result) {
+            if (result.data && result.data.ok) {
+              showToast('✓ Hvala! Predlog je poslat.', false);
+              closeSuggest();
+            } else {
+              var msg = (result.data && result.data.error) ? result.data.error : 'Slanje nije uspelo (HTTP ' + result.status + ').';
+              showToast(msg, true);
+            }
+          })
+          .catch(function (err) {
+            showToast('Mrežna greška: ' + (err && err.message ? err.message : 'nepoznato'), true);
+          })
+          .finally(function () {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = '📨 Pošalji';
+            }
+          });
+        });
+      }
 
       // ========== INITIALIZE ==========
       applySavedOrder();

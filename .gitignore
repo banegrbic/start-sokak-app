@@ -6,3 +6,7 @@
 secrets/
 *.pem
 *.key
+
+# Runtime data — nikad ne gurati na GitHub
+suggestions.log
+api/suggestions.log
