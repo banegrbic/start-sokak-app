@@ -6,7 +6,7 @@
 
 **Live demo:** https://start.sokak.app/
 
-🌐 **Jezici / Languages:** [🇷🇸 Srpski](README.md) · [🇬🇧 English](README.en.md)
+🌐 **Jezici / Languages:** 👉 [🇷🇸 Srpski](README.md) · 👉 [🇬🇧 English](README.en.md)
 
 Brza, responzivna, dark/light tema, bez naloga, bez server-side praćenja
 po defaultu. Sva korisnička stanja (favoriti, custom linkovi, sortirani

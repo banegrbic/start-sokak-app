@@ -6,7 +6,7 @@
 
 **Live demo:** https://start.sokak.app/
 
-🌐 **Languages:** [🇷🇸 Srpski](README.md) · [🇬🇧 English](README.en.md)
+🌐 **Languages:** 👉 [🇷🇸 Srpski](README.md) · 👉 [🇬🇧 English](README.en.md)
 
 Fast, responsive, dark/light theme, no account required, no server-side
 tracking by default. All user state (favorites, custom links, sort order,

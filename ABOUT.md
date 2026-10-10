@@ -1,6 +1,6 @@
 # start.sokak.app
 
-🌐 **Jezici / Languages:** [🇷🇸 Srpski](README.md) · [🇬🇧 English](README.en.md)
+🌐 **Jezici / Languages:** 👉 [🇷🇸 Srpski](README.md) · 👉 [🇬🇧 English](README.en.md)
 
 > **🇷🇸** Personalizovana start stranica sa linkovima, pretragom, AI
 > alatima i medijima. Vanilla HTML/CSS/JS, MIT licenca, privacy-first.
