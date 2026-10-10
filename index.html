@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
     <link rel="shortcut icon" type="image/png" href="favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-precomposed.png" />
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=202610101940" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=202610101946" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -1393,11 +1393,15 @@
       })();
 
       // ========== INITIALIZE ==========
-      applyPersonalTabsDefault(); // sakrij Moji/Custom za nove korisnike (pre applySavedHidden)
+      // VAZNO: applyPersonalTabsDefault() MORA biti posle renderCustom() jer
+      // Custom sekcija se kreira dinamicki u renderCustom() (ensureCustomSection).
+      // Pre toga, getElementById('category-custom-linkovi') vraca null i Custom
+      // ostaje vidljiv za nove korisnike.
       applySavedOrder();
       applySavedHidden();
       renderFavs();
-      renderCustom();
+      renderCustom();             // kreira #category-custom-linkovi u DOM-u
+      applyPersonalTabsDefault(); // sada Custom postoji, moze da se sakrije
       attachPersonalTabListeners(); // ⭐/📌 toggle dugmad (toolbar + hamburger)
       syncPersonalTabButtons();     // postavi is-active/aria-pressed na osnovu trenutnog stanja
       attachAllMobileHandlers(); // dodeli touch handlere svim linkovima za long-press
