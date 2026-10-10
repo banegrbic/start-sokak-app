@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
     <link rel="shortcut icon" type="image/png" href="favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-precomposed.png" />
-    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=202608151917" media="all" />
+    <link rel="stylesheet" id="responsive-css" href="responsive.css?v=202610101940" media="all" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -73,6 +73,8 @@
             <button type="button" id="suggestLinkBtn" class="add-custom-btn suggest-btn" title="Predloži link za start.sokak.app">💡 Predloži link</button>
             <button type="button" id="showAllBtn" class="reset-favorites" title="Prikaži sve sakrivene kategorije">Prikaži sve</button>
             <button type="button" id="resetFavorites" class="reset-favorites" title="Obriši sve iz 'Moji linkovi'">Obriši Moje</button>
+            <button type="button" id="toggleFavBtn" class="icon-btn toolbar-icon-btn personal-tab-toggle" data-tab-id="category-moji-linkovi" aria-label="Prikaži/sakrij 'Moji linkovi'" title="Prikaži/sakrij 'Moji linkovi'" aria-pressed="false">⭐</button>
+            <button type="button" id="toggleCustomBtn" class="icon-btn toolbar-icon-btn personal-tab-toggle" data-tab-id="category-custom-linkovi" aria-label="Prikaži/sakrij 'Custom linkovi'" title="Prikaži/sakrij 'Custom linkovi'" aria-pressed="false">📌</button>
             <a href="https://paypal.me/emocentrik" id="donateBtn" class="icon-btn toolbar-icon-btn" target="_blank" rel="noopener noreferrer" title="Kupite mi pivo (PayPal)">🍺</a>
             <button type="button" id="shareBtn" class="icon-btn toolbar-icon-btn" title="Preporučite sajt">📤</button>
         </div>
@@ -97,6 +99,14 @@
         <button type="button" class="hamburger-menu-item" data-action="resetFav" role="menuitem">
             <span class="hamburger-menu-icon">🗑</span>
             <span class="hamburger-menu-label">Obriši Moje</span>
+        </button>
+        <button type="button" class="hamburger-menu-item" data-action="toggleFav" role="menuitem">
+            <span class="hamburger-menu-icon">⭐</span>
+            <span class="hamburger-menu-label">Moji linkovi</span>
+        </button>
+        <button type="button" class="hamburger-menu-item" data-action="toggleCustom" role="menuitem">
+            <span class="hamburger-menu-icon">📌</span>
+            <span class="hamburger-menu-label">Custom linkovi</span>
         </button>
         <a href="https://paypal.me/emocentrik" class="hamburger-menu-item" data-action="donate" role="menuitem" target="_blank" rel="noopener noreferrer">
             <span class="hamburger-menu-icon">🍺</span>
@@ -499,6 +509,98 @@
           if (el) el.classList.add('is-hidden');
         });
         updateToggleIcons();
+      }
+
+      // ========== PERSONAL TABS DEFAULT (⭐ Moji, 📌 Custom) ==========
+      // Za NOVE korisnike: sakrij "Moji linkovi" i "Custom linkovi" po defaultu (P2).
+      // MIGRACIJA: ako korisnik već ima nesto u 'ss-favorites' (FAV_KEY), NE sakrivaj
+      // "Moji linkovi" — to je njihov workflow, ne kaznjavaj ih promenom.
+      // "Custom linkovi" se uvek sakrivaju za nove korisnike (default prazno).
+      // Ako 'ss-hidden-categories' vec postoji (korisnik je vec menjao visibility),
+      // ne diramo nista — postujemo postojeci izbor.
+      function applyPersonalTabsDefault() {
+        var existing = localStorage.getItem(HIDDEN_KEY);
+        if (existing !== null) return; // korisnik je vec bio na sajtu, postujemo izbor
+
+        var favs = load(FAV_KEY, []);
+        var toHide = ['category-custom-linkovi']; // Custom uvek sakriven za nove
+        if (favs.length === 0) toHide.push('category-moji-linkovi'); // Moji samo ako je prazno
+
+        toHide.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.add('is-hidden');
+        });
+        // NE zovemo saveHidden() ovde — applySavedHidden() ce pokupiti DOM stanje
+        // i snimiti u localStorage na prvi user-interaction (kad klikne toggle).
+        // Ali da bi naredni reload imao isto stanje, eksplicitno sacuvaj:
+        saveHidden();
+      }
+
+      // ========== PERSONAL TAB TOGGLE DUGMAD (toolbar + hamburger) ==========
+      // Svako dugme (⭐ za Moji, 📌 za Custom) toggle-uje is-hidden klasu
+      // na odgovarajucoj kategoriji. Hamburger stavke imaju istu logiku
+      // (data-action="toggleFav" / "toggleCustom").
+      function attachPersonalTabListeners() {
+        // Toolbar desktop dugmad: #toggleFavBtn, #toggleCustomBtn
+        document.querySelectorAll('.personal-tab-toggle').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var tabId = btn.getAttribute('data-tab-id');
+            if (!tabId) return;
+            togglePersonalTab(tabId);
+          });
+        });
+
+        // Hamburger meni stavke: data-action="toggleFav" / "toggleCustom"
+        var hamburgerMenu = document.getElementById('hamburgerMenu');
+        if (hamburgerMenu) {
+          hamburgerMenu.addEventListener('click', function (e) {
+            var item = e.target.closest('[data-action]');
+            if (!item) return;
+            var action = item.getAttribute('data-action');
+            if (action === 'toggleFav') {
+              togglePersonalTab('category-moji-linkovi');
+              closeHamburgerSafe();
+            } else if (action === 'toggleCustom') {
+              togglePersonalTab('category-custom-linkovi');
+              closeHamburgerSafe();
+            }
+          });
+        }
+      }
+
+      // Pomocna: zatvori hamburger meni (mobilni) — wrapper oko closeHamburger
+      // da izbegnemo crash ako funkcija nije dostupna u nekom edge-case-u.
+      function closeHamburgerSafe() {
+        var hm = document.getElementById('hamburgerMenu');
+        if (hm) hm.hidden = true;
+        var hb = document.getElementById('hamburgerBtn');
+        if (hb) hb.setAttribute('aria-expanded', 'false');
+      }
+
+      // Centralna logika: toggle jedne kategorije (⭐/📌)
+      function togglePersonalTab(tabId) {
+        var section = document.getElementById(tabId);
+        if (!section) return;
+        section.classList.toggle('is-hidden');
+        saveHidden();
+        updateToggleIcons();   // azurira 👁/🚫 na category-headeru
+        syncPersonalTabButtons(); // azurira is-active na ⭐/📌 dugmadima
+        if (typeof relayoutMasonry === 'function') relayoutMasonry();
+      }
+
+      // Sinhronizacija ⭐/📌 dugmadi sa trenutnim stanjem kategorije.
+      // Poziva se na load-u i posle svakog toggle-a.
+      function syncPersonalTabButtons() {
+        document.querySelectorAll('.personal-tab-toggle').forEach(function (btn) {
+          var tabId = btn.getAttribute('data-tab-id');
+          if (!tabId) return;
+          var section = document.getElementById(tabId);
+          if (!section) return;
+          var visible = !section.classList.contains('is-hidden');
+          btn.classList.toggle('is-active', visible);
+          btn.setAttribute('aria-pressed', visible ? 'true' : 'false');
+        });
       }
       function updateToggleIcons() {
         document.querySelectorAll('.category').forEach(function (cat) {
@@ -1291,10 +1393,13 @@
       })();
 
       // ========== INITIALIZE ==========
+      applyPersonalTabsDefault(); // sakrij Moji/Custom za nove korisnike (pre applySavedHidden)
       applySavedOrder();
       applySavedHidden();
       renderFavs();
       renderCustom();
+      attachPersonalTabListeners(); // ⭐/📌 toggle dugmad (toolbar + hamburger)
+      syncPersonalTabButtons();     // postavi is-active/aria-pressed na osnovu trenutnog stanja
       attachAllMobileHandlers(); // dodeli touch handlere svim linkovima za long-press
 
       // ========== FOOTER: popuni godinu (sitna slova, automatski ažurira) ==========

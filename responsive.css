@@ -203,6 +203,19 @@ body {
   transform: scale(0.95);
 }
 
+/* Personal tab toggle (⭐ Moji, 📌 Custom) — aktivno stanje ima svetliji border
+   i pozadinu da korisnik vidi da je kategorija vidljiva (analogno "pressed" dugmetu). */
+.personal-tab-toggle.is-active {
+  background-color: var(--link-bg);
+  border-color: var(--link-color);
+  color: var(--link-color);
+}
+.personal-tab-toggle.is-active:hover,
+.personal-tab-toggle.is-active:focus-visible {
+  background-color: var(--link-color);
+  color: var(--primary-bg);
+}
+
 /* Hamburger dugme (☰) — vidljiv samo na mobilnom/tabletu */
 .hamburger-btn {
   background: transparent;
@@ -353,7 +366,7 @@ body {
 }
 .search-input {
   flex: 1;
-  max-width: 480px;
+  max-width: 360px;
   height: 40px;
   padding: 0 16px;
   border: 1px solid var(--border-color);
