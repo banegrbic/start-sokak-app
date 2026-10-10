@@ -2,14 +2,38 @@
 *.bak.*
 *.backup.*
 
-# SSH secrets (deploy kljucevi) — nikad ne gurati na GitHub
+# SSH secrets (deploy kljucevi) — NIKAD ne gurati na GitHub
 secrets/
 *.pem
 *.key
 
-# Runtime data — nikad ne gurati na GitHub
+# Runtime data — NIKAD ne gurati na GitHub
 suggestions.log
 api/suggestions.log
+*.log
+
 # Lokalne test skripte
 _test_*.php
 phptest.php
+
+# API konfiguracija — sadrži privatne kredencijale (email, SMTP, itd.)
+# Ovaj fajl se KREIRA na serveru iz api/config.example.php.
+# Korisnici koji kloniraju repo treba da kopiraju .example i popune.
+api/config.php
+api/config.local.php
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Node / npm (za buduće tooling)
+node_modules/
+package-lock.json
+
+# Privremeni fajlovi od lokalnog razvoja
+*.tmp
+.cache/

@@ -3,34 +3,64 @@
  * start.sokak.app — Suggest Link API
  *
  * Prima JSON POST { url, name, description, email, _hp, _ts } sa index.html,
- * validira, salje email na bane.grbic@gmail.com i loguje u suggestions.log.
+ * validira, salje email na adresu definisanu u api/config.php (NIJE u git-u)
+ * i loguje u $LOG_FILE.
  *
  * Anti-spam:
  *   - Honeypot polje _hp: botovi popunjavaju, ljudi ne vide (display:none)
- *   - Timing: forma postoji bar 2 sekunde pre submita (prebrzo = bot)
+ *   - Timing: forma postoji bar $MIN_SUBMIT_SECONDS sekundi pre submita (prebrzo = bot)
  *
  * Sigurnost:
  *   - Content-Type mora biti application/json
  *   - Sve ulazne vrednosti se sanitizuju (HTML specijal karakteri escape-ovani)
- *   - URL validacija (scheme mora biti http/https, validan host)
+ *   - URL validacija (scheme mora biti http/https, validan host, SSRF zaštita)
  *   - Email opciona, ako postoji mora biti validan
  *   - Output je uvek JSON, nikad HTML
  *
- * Fajl je 1:1 mapiran na cPanel `~/start.sokak.app/api/suggest.php`.
+ * Setup (jednom, na serveru):
+ *   1. cp api/config.example.php api/config.php
+ *   2. Edituj api/config.php sa svojim email-om i SMTP podacima
+ *   3. config.php NIKAD ne ide u git (vidi .gitignore)
+ *
+ * Fajl je 1:1 mapiran na server u `~/start.sokak.app/api/suggest.php`.
  * NE stavljati u /public_html/ root jer bi bio pristupacan na celom sajtu.
  */
 
 // ===== CONFIG =====
-$TO_EMAIL    = 'bane.grbic@gmail.com';
-$FROM_EMAIL  = 'noreply@lukasplayroom.com';
-$FROM_NAME   = 'start.sokak.app';
-$SUBJECT     = '[start.sokak.app] Novi predlog linka';
-$LOG_FILE    = '/tmp/start-sokak-app-suggestions.log';
-$MIN_SUBMIT_SECONDS = 2; // Anti-spam: ljudi treba bar 2s da popune formu
-$MAX_URL_LEN  = 500;
-$MAX_NAME_LEN = 80;
-$MAX_DESC_LEN = 500;
-$MAX_EMAIL_LEN = 120;
+// Konfiguracija se ucitava iz api/config.php (NIJE u git-u — vidi .gitignore).
+// Ako config.php ne postoji, koriste se bezbedni placeholder-i (deployment
+// ce fail-ovati u tom slucaju, sto je zeljeno ponasanje — bolje da skripta
+// jasno signalizira problem nego da tiho salje na pogresan email).
+$CONFIG_FILE = __DIR__ . '/config.php';
+if (file_exists($CONFIG_FILE)) {
+    require_once $CONFIG_FILE;
+}
+
+// Bezbedni default-i (override-ovani iz config.php ako postoji)
+$TO_EMAIL     = isset($TO_EMAIL)     ? $TO_EMAIL     : 'configure-me@example.com';
+$FROM_EMAIL   = isset($FROM_EMAIL)   ? $FROM_EMAIL   : 'noreply@example.com';
+$FROM_NAME    = isset($FROM_NAME)    ? $FROM_NAME    : 'start.sokak.app';
+$SUBJECT      = isset($SUBJECT)      ? $SUBJECT      : '[start.sokak.app] Novi predlog linka';
+$LOG_FILE     = isset($LOG_FILE)     ? $LOG_FILE     : '/tmp/start-sokak-app-suggestions.log';
+$MIN_SUBMIT_SECONDS = isset($MIN_SUBMIT_SECONDS) ? $MIN_SUBMIT_SECONDS : 2;
+$MAX_URL_LEN  = isset($MAX_URL_LEN)  ? $MAX_URL_LEN  : 500;
+$MAX_NAME_LEN = isset($MAX_NAME_LEN) ? $MAX_NAME_LEN : 80;
+$MAX_DESC_LEN = isset($MAX_DESC_LEN) ? $MAX_DESC_LEN : 500;
+$MAX_EMAIL_LEN = isset($MAX_EMAIL_LEN) ? $MAX_EMAIL_LEN : 120;
+
+// Sigurnosna provera: ako config NIJE ucitan, zaustavi pre slanja email-a.
+// Ovo sprecava tiho slanje na placeholder adresu ako neko zaboravi da
+// konfigurise pre deploy-a.
+if (!file_exists($CONFIG_FILE)) {
+    error_log('[start.sokak.app suggest] config.php ne postoji na serveru — predlog nije poslat. Pogledaj api/config.example.php za setup.');
+    header('Content-Type: application/json; charset=utf-8');
+    http_response_code(503);
+    echo json_encode([
+        'ok' => false,
+        'error' => 'API nije konfigurisan. Administrator: kopiraj api/config.example.php u api/config.php i popuni vrednosti.'
+    ]);
+    exit;
+}
 
 // ===== SETUP: uvek vrati JSON =====
 header('Content-Type: application/json; charset=utf-8');

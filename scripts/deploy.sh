@@ -17,18 +17,32 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 cd "$PROJECT_DIR"
 
-# ========== KONFIGURACIJA ==========
-SSH_KEY="$PROJECT_DIR/secrets/sokak-app-deploy"
-SSH_USER="lukasplayroom"
-SSH_HOST="194.146.59.203"
+# ========== KONFIGURACIJA (POPUNI SVOJIM VREDNOSTIMA) ==========
+# Ovaj deploy skripta je generički template. Pre prvog pokretanja:
+#   1. Napravi secrets/ folder sa svojim SSH ključem (npr. secrets/deploy-key)
+#      secrets/ je vec u .gitignore — tvoj kljuc nece biti commit-ovan.
+#   2. Promeni SSH_USER, SSH_HOST, REMOTE_DIR_*, LIVE_URL_* dole.
+#   3. Za legacy domen (opciono) — postavi na svoj stari URL ili obrisi blok.
+#
+# Primer: deploy na ~/public_html/ na cPanel hostingu:
+#   SSH_USER="tvoj_cpanel_username"
+#   SSH_HOST="tvoj.server.com"  (ili IP)
+#   REMOTE_DIR_PRIMARY="~/public_html"
+#   LIVE_URL_PRIMARY="https://tvoj-domen.com/"
+
+SSH_KEY="$PROJECT_DIR/secrets/deploy-key"
+SSH_USER="your-cpanel-username"
+SSH_HOST="your-server.com"
 
 # Glavni (primarni) deployment target
-REMOTE_DIR_PRIMARY="~/start.sokak.app"
-LIVE_URL_PRIMARY="https://start.sokak.app/"
+REMOTE_DIR_PRIMARY="~/public_html"
+LIVE_URL_PRIMARY="https://your-domain.com/"
 
-# Sekundarni deployment target (kompatibilnost sa starim URL-om)
-REMOTE_DIR_LEGACY="~/tata.lukasplayroom.com/public/KulaWireless"
-LIVE_URL_LEGACY="https://tata.lukasplayroom.com/public/KulaWireless/"
+# Sekundarni deployment target (opciono — za legacy URL / stariji sajt).
+# Ako ti ne treba legacy, postavi REMOTE_DIR_LEGACY na isto kao PRIMARY
+# ili obrisi deploy_to "$REMOTE_DIR_LEGACY" liniju dole.
+REMOTE_DIR_LEGACY="~/public_html-legacy"
+LIVE_URL_LEGACY="https://legacy.your-domain.com/"
 
 # Fajlovi za deploy (bez secrets/, .git/, backup-ova)
 FILES_TO_DEPLOY=(
@@ -40,8 +54,16 @@ FILES_TO_DEPLOY=(
   "favicon-64.png"
   "favicon.svg"
   "apple-touch-icon-precomposed.png"
-  "TODO.md"
 )
+
+# ========== SIGURNOSNA PROVERA ==========
+# Ako nisi popunio konfiguraciju, deploy nece ici.
+if [ "$SSH_USER" = "your-cpanel-username" ] || [ "$SSH_HOST" = "your-server.com" ]; then
+  echo "❌ GREŠKA: deploy.sh nije konfigurisan."
+  echo "   Edituj CONFIG sekciju (linije 20-40) sa svojim SSH_USER, SSH_HOST, REMOTE_DIR."
+  echo "   Pogledaj README.md → 'Deployment' sekciju za detalje."
+  exit 1
+fi
 
 # ========== 1. BUMP VERZIJA ==========
 echo "→ Bump cache-busting ?v= u index.html"
@@ -81,8 +103,8 @@ deploy_to() {
   echo
 }
 
-deploy_to "$REMOTE_DIR_PRIMARY" "PRIMARNI: start.sokak.app"
-deploy_to "$REMOTE_DIR_LEGACY" "LEGACY: tata.lukasplayroom.com"
+deploy_to "$REMOTE_DIR_PRIMARY" "PRIMARY"
+deploy_to "$REMOTE_DIR_LEGACY" "LEGACY"
 
 # ========== 4. VERIFIKACIJA ==========
 verify_url() {
