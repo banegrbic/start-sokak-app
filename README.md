@@ -6,6 +6,8 @@
 
 **Live demo:** https://start.sokak.app/
 
+🌐 **Jezici / Languages:** [🇷🇸 Srpski](README.md) · [🇬🇧 English](README.en.md)
+
 Brza, responzivna, dark/light tema, bez naloga, bez server-side praćenja
 po defaultu. Sva korisnička stanja (favoriti, custom linkovi, sortirani
 redosled, sakrivene kategorije) čuvaju se u `localStorage` — privatno,
@@ -392,4 +394,4 @@ projekat nije povezan sa sajtovima na koje linkuje.
 
 ## 🗺️ Roadmap
 
-Vidi [TODO.md](TODO.md) za tehničke napomene i buduće radove.
+Vidi [CHANGELOG.md](CHANGELOG.md) za istoriju verzija i buduće radove.
